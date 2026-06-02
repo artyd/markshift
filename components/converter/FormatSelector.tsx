@@ -31,7 +31,7 @@ export function FormatSelector({ direction, sourceExt, selected, onSelect }: For
           </span>
         </div>
         {!supported && (
-          <p className="mt-4 flex items-center justify-center gap-2 text-sm text-amber-400">
+          <p className="mt-4 flex items-center justify-center gap-2 text-sm text-destructive">
             <Lock className="size-4" />
             Формат .{sourceExt} ще не підтримується (скоро).
           </p>
@@ -81,7 +81,7 @@ function FormatCard({
         disabled
           ? "cursor-not-allowed border-border bg-secondary/30 opacity-50"
           : active
-            ? "border-primary bg-primary/10 glow-primary"
+            ? "border-primary bg-primary/10 shadow-sm"
             : "border-border bg-secondary/40 hover:border-primary/60",
       ].join(" ")}
     >

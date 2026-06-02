@@ -99,9 +99,9 @@ export function FileUploader({
       <div
         {...getRootProps()}
         className={[
-          "relative flex min-h-72 cursor-pointer flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed p-8 text-center transition-all duration-200",
+          "relative flex min-h-72 cursor-pointer flex-col items-center justify-center gap-4 rounded-3xl border-2 border-dashed bg-card p-8 text-center shadow-sm transition-all duration-200",
           isDragActive
-            ? "scale-[1.02] border-primary bg-primary/5 glow-primary"
+            ? "scale-[1.02] border-primary bg-primary/5 shadow-lg"
             : "border-border hover:border-primary/60 hover:bg-secondary/40",
         ].join(" ")}
         aria-label="Зона завантаження файлу"

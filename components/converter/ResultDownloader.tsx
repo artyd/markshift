@@ -33,33 +33,37 @@ export function ResultDownloader({ result, onReset }: ResultDownloaderProps) {
   };
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex items-center gap-3">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: [0, 1.15, 1] }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-        >
-          <CheckCircle2 className="size-6 text-primary" />
-        </motion.div>
-        <div>
-          <p className="font-medium">{result.filename}</p>
-          <p className="text-sm text-muted-foreground">
-            {formatSize(result.size)} · {result.processingTime} мс
-          </p>
-        </div>
+    <div className="flex flex-col gap-5 rounded-2xl border border-border bg-card p-6 text-center">
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: [0, 1.15, 1] }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="mx-auto flex size-14 items-center justify-center rounded-full bg-primary/10"
+      >
+        <CheckCircle2 className="size-8 text-primary" />
+      </motion.div>
+      <div>
+        <p className="font-semibold">Готово!</p>
+        <p className="mt-1 truncate text-sm font-medium" title={result.filename}>
+          {result.filename}
+        </p>
+        <p className="text-sm text-muted-foreground">
+          {formatSize(result.size)} · {result.processingTime} мс
+        </p>
       </div>
-      <div className="flex gap-2">
-        <Button variant="ghost" onClick={onReset}>
-          <RotateCcw className="size-4" />
-          Ще раз
+      <div className="flex flex-col gap-2">
+        <Button
+          size="lg"
+          onClick={download}
+          className="bg-gradient-primary text-primary-foreground"
+        >
+          <Download className="size-4" />
+          Завантажити
         </Button>
-        <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-          <Button onClick={download} className="bg-gradient-primary text-primary-foreground">
-            <Download className="size-4" />
-            Завантажити
-          </Button>
-        </motion.div>
+        <Button variant="outline" onClick={onReset}>
+          <RotateCcw className="size-4" />
+          Конвертувати ще
+        </Button>
       </div>
     </div>
   );

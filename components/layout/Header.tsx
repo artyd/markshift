@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu } from "lucide-react";
+import { Menu, ArrowRight } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { GithubIcon } from "@/components/GithubIcon";
 import {
@@ -13,12 +13,17 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { Logo } from "@/components/Logo";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { SITE } from "@/lib/constants/site";
 
 const NAV_LINKS = [
   { href: "#formats", label: "Формати" },
   { href: "#how", label: "Як це працює" },
 ];
+
+function scrollToConverter() {
+  document.getElementById("converter")?.scrollIntoView({ behavior: "smooth" });
+}
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -54,19 +59,19 @@ export function Header() {
             <GithubIcon className="size-4" />
             GitHub
           </a>
+          <ThemeToggle />
+          <Button size="sm" className="ml-1 gap-1.5" onClick={scrollToConverter}>
+            Конвертувати
+            <ArrowRight className="size-4" />
+          </Button>
         </nav>
 
-        {/* Mobile nav */}
-        <Sheet open={open} onOpenChange={setOpen}>
+        {/* Mobile actions */}
+        <div className="flex items-center gap-1 md:hidden">
+          <ThemeToggle />
+          <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger
-            render={
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden"
-                aria-label="Меню"
-              />
-            }
+            render={<Button variant="ghost" size="icon" aria-label="Меню" />}
           >
             <Menu className="size-5" />
           </SheetTrigger>
@@ -108,9 +113,22 @@ export function Header() {
                 <GithubIcon className="size-4" />
                 GitHub
               </a>
+              <SheetClose
+                render={
+                  <Button
+                    size="lg"
+                    className="mt-2 gap-1.5"
+                    onClick={scrollToConverter}
+                  />
+                }
+              >
+                Конвертувати
+                <ArrowRight className="size-4" />
+              </SheetClose>
             </nav>
           </SheetContent>
-        </Sheet>
+          </Sheet>
+        </div>
       </div>
     </header>
   );

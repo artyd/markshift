@@ -143,7 +143,12 @@ export function ConverterZone() {
   }
 
   return (
-    <div id="converter" className="mx-auto w-full max-w-2xl scroll-mt-24">
+    <div
+      id="converter"
+      className={`mx-auto w-full scroll-mt-24 ${
+        state.phase === "done" ? "max-w-5xl" : "max-w-2xl"
+      }`}
+    >
       <AnimatePresence mode="wait">
         {state.phase === "idle" && (
           <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -202,7 +207,7 @@ export function ConverterZone() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col gap-4"
+            className="grid grid-cols-1 gap-4 lg:grid-cols-[2fr_3fr] lg:items-start"
           >
             <ResultDownloader result={state.result} onReset={() => dispatch({ type: "clear" })} />
             <MarkdownPreview

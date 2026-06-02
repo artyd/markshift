@@ -2,7 +2,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/home/HeroSection";
 import { FeaturesGrid } from "@/components/home/FeaturesGrid";
-import { FormatsShowcase } from "@/components/home/FormatsShowcase";
+import { FormatGrid } from "@/components/home/FormatGrid";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { ConverterZone } from "@/components/converter/ConverterZone";
 import { ConverterBoundary } from "@/components/converter/ConverterBoundary";
@@ -18,8 +18,8 @@ export default function Home() {
             <ConverterZone />
           </ConverterBoundary>
         </section>
+        <FormatGrid />
         <FeaturesGrid />
-        <FormatsShowcase />
         <HowItWorks />
       </main>
       <Footer />

@@ -40,7 +40,7 @@ export function FeaturesGrid() {
             transition={{ duration: 0.4, delay: i * 0.1 }}
             whileHover={{ y: -4 }}
           >
-            <Card className="group h-full border-border bg-card p-6 transition-shadow duration-300 hover:border-primary/40 hover:glow-primary">
+            <Card className="group h-full border-border bg-card p-6 shadow-sm transition-shadow duration-300 hover:border-primary/40 hover:shadow-lg">
               <div className="mb-4 flex size-11 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-gradient-primary group-hover:text-primary-foreground">
                 <f.icon className="size-6" />
               </div>

@@ -1,48 +1,79 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Upload, Wand2, Download, ArrowRight } from "lucide-react";
+import { Upload, Settings2, Download, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const STEPS = [
-  { icon: Upload, title: "Завантажте", text: "Перетягніть файл у зону завантаження або оберіть кілька одразу." },
-  { icon: Wand2, title: "Конвертуйте", text: "Оберіть цільовий формат і натисніть кнопку конвертації." },
-  { icon: Download, title: "Завантажте результат", text: "Скачайте готовий файл, перегляньте або скопіюйте Markdown." },
+  {
+    num: "01",
+    icon: Upload,
+    title: "Завантаж файл",
+    text: "Перетягни файл у зону завантаження або обери кілька одразу.",
+  },
+  {
+    num: "02",
+    icon: Settings2,
+    title: "Обери формат",
+    text: "Вкажи цільовий формат і натисни кнопку конвертації.",
+  },
+  {
+    num: "03",
+    icon: Download,
+    title: "Завантаж результат",
+    text: "Скачай готовий файл, переглянь або скопіюй Markdown.",
+  },
 ];
+
+function scrollToConverter() {
+  document.getElementById("converter")?.scrollIntoView({ behavior: "smooth" });
+}
 
 export function HowItWorks() {
   return (
     <section id="how" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-16">
-      <h2 className="text-center text-3xl font-bold">Як це працює</h2>
-      <p className="mt-2 text-center text-muted-foreground">Три прості кроки — і ваш файл готовий.</p>
+      <h2 className="text-center text-3xl font-bold tracking-tight">
+        Три простих кроки
+      </h2>
 
-      <div className="mt-12 grid grid-cols-1 items-stretch gap-6 sm:grid-cols-3">
+      <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
         {STEPS.map((s, i) => (
-          <div key={s.title} className="relative flex">
+          <div key={s.num} className="relative">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.4, delay: i * 0.12 }}
-              className="relative flex w-full flex-col items-center rounded-xl border border-border bg-card p-6 text-center"
+              className="flex flex-col items-start gap-3"
             >
-              <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-clip-text text-5xl font-black text-transparent [background-image:var(--gradient-primary)] opacity-30">
-                {i + 1}
+              <span className="gradient-text text-5xl font-extrabold leading-none opacity-40">
+                {s.num}
               </span>
-              <div className="mt-3 mb-4 flex size-14 items-center justify-center rounded-full bg-gradient-primary text-primary-foreground">
-                <s.icon className="size-7" />
+              <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <s.icon className="size-8" />
               </div>
-              <h3 className="font-semibold">{s.title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{s.text}</p>
+              <h3 className="text-base font-semibold">{s.title}</h3>
+              <p className="text-sm text-muted-foreground">{s.text}</p>
             </motion.div>
 
-            {/* Connecting arrow (desktop only) */}
             {i < STEPS.length - 1 && (
-              <div className="absolute top-1/2 -right-5 z-10 hidden -translate-y-1/2 text-primary sm:block">
+              <div className="absolute top-6 -right-4 hidden text-muted-foreground/40 sm:block">
                 <ArrowRight className="size-6" />
               </div>
             )}
           </div>
         ))}
+      </div>
+
+      <div className="mt-12 flex justify-center">
+        <Button
+          size="lg"
+          onClick={scrollToConverter}
+          className="h-12 gap-2 rounded-xl px-7 text-base"
+        >
+          Спробувати зараз
+          <ArrowRight className="size-5" />
+        </Button>
       </div>
     </section>
   );
