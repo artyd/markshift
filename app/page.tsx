@@ -24,8 +24,9 @@ export default function HomePage() {
   const [tab, setTab] = useState<TabId>('converter');
 
   return (
-    <main>
+    <>
       <Header />
+      <main>
 
       {/* ═══ SECTION 1 — Hero (100vh) ═══ */}
       <section style={{
@@ -109,6 +110,7 @@ export default function HomePage() {
         <HowItWorks />
         <Footer />
       </section>
-    </main>
+      </main>
+    </>
   );
 }

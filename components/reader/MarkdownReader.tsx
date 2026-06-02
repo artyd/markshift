@@ -100,11 +100,8 @@ export function MarkdownReader() {
         <textarea
           placeholder="Вставте Markdown текст сюди..."
           onChange={e => {
-            const v = e.target.value;
-            if (v.trim()) {
-              setMarkdown(v);
-              setFileName('paste.md');
-            }
+            setMarkdown(e.target.value);
+            if (!fileName) setFileName('paste.md');
           }}
           style={{
             width: '80%', margin: '0 auto', display: 'block',
