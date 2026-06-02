@@ -36,9 +36,9 @@ export function HeroSection() {
         {/* Badge */}
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: '8px',
-          border: '1px solid #E2E8F0', borderRadius: '99px',
-          padding: '6px 16px', fontSize: '13px', color: '#666', background: 'white',
-          marginBottom: '24px',
+          border: '1px solid hsl(var(--border))', borderRadius: '99px',
+          padding: '6px 16px', fontSize: '13px', color: 'hsl(var(--muted-foreground))',
+          background: 'hsl(var(--card))', marginBottom: '24px',
         }}>
           <span style={{
             width: '6px', height: '6px', borderRadius: '50%',
@@ -49,14 +49,15 @@ export function HeroSection() {
 
         <h1 style={{
           fontSize: '48px', fontWeight: 700, lineHeight: 1.1,
-          letterSpacing: '-1.5px', marginBottom: '20px', color: '#0F172A',
+          letterSpacing: '-1.5px', marginBottom: '20px',
+          color: 'hsl(var(--foreground))',
         }}>
           Конвертуй будь-який файл у{' '}
           <span className="gradient-text">Markdown</span> — і назад
         </h1>
 
         <p style={{
-          fontSize: '16px', color: '#666', maxWidth: '460px',
+          fontSize: '16px', color: 'hsl(var(--muted-foreground))', maxWidth: '460px',
           lineHeight: 1.7, marginBottom: '24px',
         }}>
           PDF, DOCX, Excel, PowerPoint та 20+ форматів.
@@ -66,7 +67,7 @@ export function HeroSection() {
         {/* Checklist */}
         <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px', margin: '0 0 36px', padding: 0, listStyle: 'none' }}>
           {CHECKLIST.map((item) => (
-            <li key={item} style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '15px', color: '#374151' }}>
+            <li key={item} style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '15px', color: 'hsl(var(--foreground))' }}>
               <span style={{
                 width: '24px', height: '24px', borderRadius: '50%',
                 background: '#D1FAE5', border: '1px solid #6EE7B7',
@@ -88,29 +89,29 @@ export function HeroSection() {
             onClick={() => scrollTo('converter')}
             style={{
               height: '52px', padding: '0 28px', fontSize: '15px', fontWeight: 600,
-              background: '#0F172A', color: 'white',
+              background: 'hsl(var(--foreground))', color: 'hsl(var(--background))',
               border: 'none', borderRadius: '14px', cursor: 'pointer',
               display: 'flex', alignItems: 'center', gap: '8px',
-              transition: 'background 0.2s',
+              transition: 'opacity 0.2s',
             }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#1E293B')}
-            onMouseLeave={e => (e.currentTarget.style.background = '#0F172A')}
+            onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
+            onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
           >
             Почати конвертацію
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M5 12h14M13 6l6 6-6 6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
           <button
             onClick={() => scrollTo('converter')}
             style={{
               height: '52px', padding: '0 28px', fontSize: '15px', fontWeight: 600,
-              background: 'white', color: '#374151',
-              border: '1.5px solid #E2E8F0', borderRadius: '14px', cursor: 'pointer',
-              transition: 'border-color 0.2s, background 0.2s',
+              background: 'hsl(var(--card))', color: 'hsl(var(--foreground))',
+              border: '1.5px solid hsl(var(--border))', borderRadius: '14px', cursor: 'pointer',
+              transition: 'background 0.2s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = '#94A3B8'; e.currentTarget.style.background = '#F8FAFC'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.background = 'white'; }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'hsl(var(--secondary))')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'hsl(var(--card))')}
           >
             Переглянути формати
           </button>

@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
     "@iarna/rtf-to-html",
     "fast-xml-parser",
     "smol-toml",
+    "pdf2json",
   ],
 };
 

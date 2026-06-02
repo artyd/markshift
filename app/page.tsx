@@ -11,6 +11,7 @@ import { ConverterZone } from '@/components/converter/ConverterZone';
 import { ConverterBoundary } from '@/components/converter/ConverterBoundary';
 import { MarkdownReader } from '@/components/reader/MarkdownReader';
 import { MarkdownEditor } from '@/components/reader/MarkdownEditor';
+import { RoadmapSection } from '@/components/home/RoadmapSection';
 
 type TabId = 'converter' | 'reader' | 'editor';
 
@@ -26,17 +27,17 @@ export default function HomePage() {
   return (
     <>
       <Header />
-      <main>
+      <main className="snap-container">
 
       {/* ═══ SECTION 1 — Hero (100vh) ═══ */}
-      <section style={{
+      <section className="snap-section" style={{
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         position: 'relative',
         overflow: 'hidden',
-        background: 'white',
+        background: 'hsl(var(--background))',
       }}>
         <AnimatedBackground />
         <HeroSection />
@@ -44,12 +45,12 @@ export default function HomePage() {
       </section>
 
       {/* ═══ SECTION 2 — Converter / Reader / Editor (100vh) ═══ */}
-      <section id="converter" style={{
+      <section id="converter" className="snap-section scrollable-inside" style={{
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        background: '#F8F9FA',
+        background: 'hsl(var(--muted))',
         padding: '80px 48px',
       }}>
         {/* Section heading */}
@@ -99,15 +100,16 @@ export default function HomePage() {
       </section>
 
       {/* ═══ SECTION 3 — How it works + Footer (100vh) ═══ */}
-      <section style={{
+      <section className="snap-section scrollable-inside" style={{
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        background: '#FFFFFF',
+        background: 'hsl(var(--background))',
         padding: '80px 48px 0',
       }}>
         <HowItWorks />
+        <RoadmapSection />
         <Footer />
       </section>
       </main>

@@ -307,10 +307,21 @@
   to   { transform: rotate(360deg); }
 }
 
-/* @uiw/react-md-editor overrides. */
+/* @uiw/react-md-editor overrides — light. */
 .w-md-editor { border-radius: 0 !important; box-shadow: none !important; }
 .w-md-editor-toolbar { border-bottom: 1px solid #E8E8E8 !important; background: #FAFAFA !important; }
 .wmde-markdown { background: white !important; font-size: 15px !important; line-height: 1.8 !important; }
+
+/* @uiw/react-md-editor overrides — dark. */
+.dark .w-md-editor { background: hsl(220 18% 9%) !important; color: hsl(210 20% 94%) !important; }
+.dark .w-md-editor-toolbar { border-bottom-color: hsl(220 15% 16%) !important; background: hsl(220 18% 9%) !important; }
+.dark .w-md-editor-toolbar button { color: hsl(210 20% 70%) !important; }
+.dark .w-md-editor-toolbar button:hover { color: hsl(210 20% 94%) !important; background: hsl(220 15% 14%) !important; }
+.dark .w-md-editor-text { background: hsl(220 18% 9%) !important; color: hsl(210 20% 94%) !important; }
+.dark .w-md-editor-text-pre > code { background: transparent !important; color: hsl(210 20% 94%) !important; }
+.dark .wmde-markdown { background: hsl(220 18% 9%) !important; color: hsl(210 20% 94%) !important; }
+.dark .wmde-markdown code { background: hsl(220 15% 14%) !important; }
+.dark .wmde-markdown pre { background: hsl(220 15% 14%) !important; border-color: hsl(220 15% 16%) !important; }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-mesh,
@@ -320,6 +331,22 @@
   [style*="animation"] {
     animation: none !important;
   }
+}
+
+/* Scroll snap — full-screen section slides. */
+.snap-container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: none;
+}
+.snap-section {
+  scroll-snap-align: start;
+  min-height: 100vh;
+}
+.snap-section.scrollable-inside {
+  scroll-snap-stop: normal;
+  overflow-y: auto;
 }
 
 /* Custom scrollbars. */

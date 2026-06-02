@@ -65,35 +65,36 @@ export function MarkdownReader() {
           {...getRootProps()}
           style={{
             minHeight: '320px', width: '80%', margin: '0 auto',
-            border: `2px dashed ${isDragActive ? '#3B82F6' : '#E2E8F0'}`,
+            border: `2px dashed ${isDragActive ? 'hsl(var(--primary))' : 'hsl(var(--border))'}`,
             borderRadius: '24px', display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-            background: isDragActive ? '#EFF6FF' : 'white', padding: '48px',
-            transition: 'all 0.2s ease',
+            background: isDragActive ? 'hsl(var(--primary)/0.05)' : 'hsl(var(--card))',
+            padding: '48px', transition: 'all 0.2s ease',
           }}
         >
           <input {...getInputProps()} />
           <div style={{ fontSize: '64px', marginBottom: '16px', lineHeight: 1 }}>📖</div>
-          <div style={{ fontSize: '20px', fontWeight: 600, marginBottom: '8px', color: '#0F172A' }}>
+          <div style={{ fontSize: '20px', fontWeight: 600, marginBottom: '8px', color: 'hsl(var(--foreground))' }}>
             {isDragActive ? 'Відпустіть файл тут' : 'Перетягни .md файл або клікни'}
           </div>
-          <div style={{ fontSize: '14px', color: '#888', marginBottom: '20px' }}>
+          <div style={{ fontSize: '14px', color: 'hsl(var(--muted-foreground))', marginBottom: '20px' }}>
             Підтримуються .md та .markdown файли
           </div>
           <button
             type="button"
             onClick={e => { e.stopPropagation(); open(); }}
             style={{
-              padding: '10px 24px', borderRadius: '10px', border: '1px solid #E2E8F0',
-              background: 'white', fontSize: '14px', cursor: 'pointer', fontWeight: 500,
-              transition: 'background 0.2s',
+              padding: '10px 24px', borderRadius: '10px',
+              border: '1px solid hsl(var(--border))',
+              background: 'hsl(var(--card))', fontSize: '14px', cursor: 'pointer',
+              fontWeight: 500, color: 'hsl(var(--foreground))', transition: 'background 0.2s',
             }}
           >
             Обрати файл
           </button>
         </div>
 
-        <div style={{ textAlign: 'center', margin: '24px 0', color: '#bbb', fontSize: '14px' }}>
+        <div style={{ textAlign: 'center', margin: '24px 0', color: 'hsl(var(--muted-foreground))', fontSize: '14px' }}>
           — або —
         </div>
 
@@ -106,9 +107,9 @@ export function MarkdownReader() {
           style={{
             width: '80%', margin: '0 auto', display: 'block',
             minHeight: '160px', padding: '16px', borderRadius: '12px',
-            border: '1px solid #E2E8F0', fontSize: '14px',
-            fontFamily: 'monospace', resize: 'vertical',
-            outline: 'none',
+            border: '1px solid hsl(var(--border))',
+            background: 'hsl(var(--card))', color: 'hsl(var(--foreground))',
+            fontSize: '14px', fontFamily: 'monospace', resize: 'vertical', outline: 'none',
           }}
         />
       </div>
@@ -123,10 +124,10 @@ export function MarkdownReader() {
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         marginBottom: '16px', flexWrap: 'wrap', gap: '8px',
-        background: 'white', border: '1px solid #E2E8F0', borderRadius: '16px',
-        padding: '12px 16px',
+        background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))',
+        borderRadius: '16px', padding: '12px 16px',
       }}>
-        <div style={{ fontSize: '14px', color: '#666' }}>
+        <div style={{ fontSize: '14px', color: 'hsl(var(--muted-foreground))' }}>
           📄 {fileName} · {lines.length} рядків
         </div>
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
@@ -136,9 +137,9 @@ export function MarkdownReader() {
               onClick={() => setView(v)}
               style={{
                 padding: '6px 14px', borderRadius: '8px', fontSize: '13px', cursor: 'pointer',
-                border: '1px solid #E2E8F0',
-                background: view === v ? '#1a1a1a' : 'white',
-                color: view === v ? 'white' : '#555',
+                border: '1px solid hsl(var(--border))',
+                background: view === v ? 'hsl(var(--foreground))' : 'hsl(var(--card))',
+                color: view === v ? 'hsl(var(--background))' : 'hsl(var(--muted-foreground))',
                 fontWeight: 500, transition: 'all 0.15s',
               }}
             >
@@ -147,19 +148,34 @@ export function MarkdownReader() {
           ))}
           <button
             onClick={copy}
-            style={{ padding: '6px 14px', borderRadius: '8px', border: '1px solid #E2E8F0', background: 'white', fontSize: '13px', cursor: 'pointer' }}
+            style={{
+              padding: '6px 14px', borderRadius: '8px',
+              border: '1px solid hsl(var(--border))',
+              background: 'hsl(var(--card))', color: 'hsl(var(--foreground))',
+              fontSize: '13px', cursor: 'pointer',
+            }}
           >
             📋 Копіювати
           </button>
           <button
             onClick={download}
-            style={{ padding: '6px 14px', borderRadius: '8px', border: '1px solid #E2E8F0', background: 'white', fontSize: '13px', cursor: 'pointer' }}
+            style={{
+              padding: '6px 14px', borderRadius: '8px',
+              border: '1px solid hsl(var(--border))',
+              background: 'hsl(var(--card))', color: 'hsl(var(--foreground))',
+              fontSize: '13px', cursor: 'pointer',
+            }}
           >
             ↓ Завантажити
           </button>
           <button
             onClick={() => { setMarkdown(''); setFileName(''); }}
-            style={{ padding: '6px 14px', borderRadius: '8px', border: '1px solid #FFE0E0', background: '#FFF5F5', color: '#DC2626', fontSize: '13px', cursor: 'pointer' }}
+            style={{
+              padding: '6px 14px', borderRadius: '8px',
+              border: '1px solid hsl(var(--destructive)/0.3)',
+              background: 'hsl(var(--destructive)/0.08)',
+              color: 'hsl(var(--destructive))', fontSize: '13px', cursor: 'pointer',
+            }}
           >
             ✕
           </button>
@@ -191,7 +207,7 @@ export function MarkdownReader() {
         )}
         {(view === 'split' || view === 'preview') && (
           <div style={{
-            background: 'white', border: '1px solid #E2E8F0',
+            background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))',
             borderRadius: '16px', overflow: 'auto', padding: '32px',
           }}>
             <div
