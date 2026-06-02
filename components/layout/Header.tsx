@@ -16,10 +16,7 @@ import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SITE } from "@/lib/constants/site";
 
-const NAV_LINKS = [
-  { href: "#formats", label: "Формати" },
-  { href: "#how", label: "Як це працює" },
-];
+const NAV_LINKS = [{ href: "#how", label: "Як це працює" }];
 
 function scrollToConverter() {
   document.getElementById("converter")?.scrollIntoView({ behavior: "smooth" });
@@ -30,21 +27,21 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2 font-semibold">
-          <Logo size={32} />
+      <div className="mx-auto flex h-[72px] max-w-6xl items-center justify-between px-4 md:px-8">
+        <Link href="/" className="flex items-center gap-2.5 font-semibold">
+          <Logo size={36} />
           <span className="text-lg">
             Mark<span className="text-gradient">Shift</span>
           </span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-8 text-[15px] md:flex lg:gap-10">
           {NAV_LINKS.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className={buttonVariants({ variant: "ghost", size: "sm" })}
+              className="text-muted-foreground transition-colors hover:text-foreground"
             >
               {l.label}
             </Link>
@@ -54,16 +51,18 @@ export function Header() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub"
-            className={buttonVariants({ variant: "ghost", size: "sm" })}
+            className="flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
           >
             <GithubIcon className="size-4" />
             GitHub
           </a>
-          <ThemeToggle />
-          <Button size="sm" className="ml-1 gap-1.5" onClick={scrollToConverter}>
-            Конвертувати
-            <ArrowRight className="size-4" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Button className="h-10 gap-1.5" onClick={scrollToConverter}>
+              Конвертувати
+              <ArrowRight className="size-4" />
+            </Button>
+          </div>
         </nav>
 
         {/* Mobile actions */}

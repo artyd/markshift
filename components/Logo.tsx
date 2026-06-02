@@ -2,16 +2,16 @@ interface LogoProps {
   /** Pixel size of the square mark. */
   size?: number;
   className?: string;
-  /** Hide the inner `.md` glyph (e.g. for tiny favicons). */
+  /** Reserved for callers that hid the old `.md` glyph; no-op in this mark. */
   hideLabel?: boolean;
 }
 
 /**
- * MarkShift brand mark: two crossing arrows — cyan pointing right (into .md),
- * violet pointing left (out of .md) — expressing bidirectional conversion,
- * with an `.md` glyph at the crossing. Drives Header, Footer, favicon and OG.
+ * MarkShift brand mark: a rounded gradient tile holding a bold `M` with a
+ * forward conversion arrow, expressing "shift to Markdown". Theme-neutral —
+ * the vivid gradient reads on both light and dark backgrounds.
  */
-export function Logo({ size = 32, className, hideLabel = false }: LogoProps) {
+export function Logo({ size = 32, className }: LogoProps) {
   return (
     <svg
       width={size}
@@ -23,66 +23,36 @@ export function Logo({ size = 32, className, hideLabel = false }: LogoProps) {
       className={className}
     >
       <defs>
-        <linearGradient id="ms-cyan" x1="0" y1="0" x2="48" y2="48">
-          <stop offset="0" stopColor="hsl(195 85% 60%)" />
-          <stop offset="1" stopColor="hsl(195 85% 45%)" />
-        </linearGradient>
-        <linearGradient id="ms-violet" x1="48" y1="0" x2="0" y2="48">
-          <stop offset="0" stopColor="hsl(275 70% 70%)" />
-          <stop offset="1" stopColor="hsl(275 70% 55%)" />
+        <linearGradient id="ms-tile" x1="0" y1="0" x2="48" y2="48">
+          <stop offset="0" stopColor="hsl(199 89% 52%)" />
+          <stop offset="1" stopColor="hsl(265 84% 60%)" />
         </linearGradient>
       </defs>
 
-      {/* Rounded tile background */}
-      <rect x="1" y="1" width="46" height="46" rx="11" fill="hsl(220 18% 9%)" />
-      <rect
-        x="1"
-        y="1"
-        width="46"
-        height="46"
-        rx="11"
+      {/* Rounded gradient tile */}
+      <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#ms-tile)" />
+
+      {/* Bold "M" letterform */}
+      <path
+        d="M13 33 V16 L21 27 L29 16 V33"
+        stroke="white"
+        strokeWidth="3.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         fill="none"
-        stroke="hsl(220 15% 18%)"
-        strokeWidth="1.5"
       />
 
-      {/* Cyan arrow → (top) */}
+      {/* Forward conversion arrow */}
       <g
-        stroke="url(#ms-cyan)"
-        strokeWidth="3.2"
+        stroke="white"
+        strokeWidth="3.4"
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
       >
-        <path d="M11 18 H33" />
-        <path d="M27 12 L34 18 L27 24" />
+        <path d="M30 24 H38" />
+        <path d="M34 20 L39 24 L34 28" />
       </g>
-
-      {/* Violet arrow ← (bottom) */}
-      <g
-        stroke="url(#ms-violet)"
-        strokeWidth="3.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      >
-        <path d="M37 30 H15" />
-        <path d="M21 24 L14 30 L21 36" />
-      </g>
-
-      {!hideLabel && (
-        <text
-          x="24"
-          y="44.5"
-          textAnchor="middle"
-          fontSize="8"
-          fontWeight="700"
-          fontFamily="ui-monospace, SFMono-Regular, monospace"
-          fill="hsl(210 20% 70%)"
-        >
-          .md
-        </text>
-      )}
     </svg>
   );
 }

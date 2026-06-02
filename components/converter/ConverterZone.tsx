@@ -136,7 +136,7 @@ export function ConverterZone() {
 
   if (batchFiles) {
     return (
-      <div id="converter" className="mx-auto w-full max-w-2xl scroll-mt-24">
+      <div className="mx-auto w-full max-w-2xl">
         <BatchConverter files={batchFiles} onReset={() => setBatchFiles(null)} />
       </div>
     );
@@ -144,8 +144,7 @@ export function ConverterZone() {
 
   return (
     <div
-      id="converter"
-      className={`mx-auto w-full scroll-mt-24 ${
+      className={`mx-auto w-full ${
         state.phase === "done" ? "max-w-5xl" : "max-w-2xl"
       }`}
     >

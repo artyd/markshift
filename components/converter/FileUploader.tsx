@@ -5,11 +5,13 @@ import { useDropzone, type FileRejection } from "react-dropzone";
 import { motion } from "framer-motion";
 import { UploadCloud, FileText, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { formatSize } from "@/lib/utils/sizeFormatter";
 import { getExtension } from "@/lib/utils/fileDetector";
-import { ACCEPTED_SOURCE_EXTS, TO_MARKDOWN_FORMATS } from "@/lib/constants/formats";
+import { ACCEPTED_SOURCE_EXTS } from "@/lib/constants/formats";
 import { LIMITS } from "@/lib/constants/limits";
+
+/** Max files accepted in a single batch drop. */
+const MAX_BATCH_FILES = 20;
 
 interface FileUploaderProps {
   file: File | null;
@@ -33,12 +35,14 @@ export function FileUploader({
   const onDrop = useCallback(
     (accepted: File[], rejections: FileRejection[]) => {
       if (rejections.length > 0) {
-        const err = rejections[0].errors[0];
-        onReject(
-          err.code === "file-too-large"
+        const code = rejections[0].errors[0]?.code;
+        const message =
+          code === "file-too-large"
             ? `Файл завеликий. Максимум ${LIMITS.MAX_FILE_SIZE / (1024 * 1024)} МБ.`
-            : "Не вдалося прийняти файл.",
-        );
+            : code === "too-many-files"
+              ? `Можна завантажити максимум ${MAX_BATCH_FILES} файлів за раз.`
+              : "Не вдалося прийняти файл.";
+        onReject(message);
         return;
       }
       const valid: File[] = [];
@@ -61,6 +65,7 @@ export function FileUploader({
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
     maxSize: LIMITS.MAX_FILE_SIZE,
+    maxFiles: multiple ? MAX_BATCH_FILES : 1,
     multiple,
     noClick: Boolean(file),
     noKeyboard: Boolean(file),
@@ -95,56 +100,41 @@ export function FileUploader({
   }
 
   return (
-    <div>
-      <div
-        {...getRootProps()}
-        className={[
-          "relative flex min-h-72 cursor-pointer flex-col items-center justify-center gap-4 rounded-3xl border-2 border-dashed bg-card p-8 text-center shadow-sm transition-all duration-200",
-          isDragActive
-            ? "scale-[1.02] border-primary bg-primary/5 shadow-lg"
-            : "border-border hover:border-primary/60 hover:bg-secondary/40",
-        ].join(" ")}
-        aria-label="Зона завантаження файлу"
+    <div
+      {...getRootProps()}
+      className={[
+        "relative mx-auto flex min-h-[320px] w-full cursor-pointer flex-col items-center justify-center gap-5 rounded-3xl border-2 border-dashed bg-card p-12 text-center shadow-sm transition-all duration-200 md:p-16",
+        isDragActive
+          ? "scale-[1.02] border-primary bg-primary/5 shadow-lg"
+          : "border-border hover:border-primary/60 hover:bg-secondary/40",
+      ].join(" ")}
+      aria-label="Зона завантаження файлу"
+    >
+      <input {...getInputProps()} />
+      <motion.div
+        animate={isDragActive ? { y: -6, scale: 1.1 } : { y: 0, scale: 1 }}
+        className="flex size-20 items-center justify-center rounded-full bg-gradient-primary text-primary-foreground"
       >
-        <input {...getInputProps()} />
-        <motion.div
-          animate={isDragActive ? { y: -6, scale: 1.1 } : { y: 0, scale: 1 }}
-          className="flex size-16 items-center justify-center rounded-full bg-gradient-primary text-primary-foreground"
-        >
-          <UploadCloud className="size-8" />
-        </motion.div>
-        <div>
-          <p className="text-lg font-medium">
-            {isDragActive ? "Відпустіть файл тут" : "Перетягніть файл або натисніть"}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            До {LIMITS.MAX_FILE_SIZE / (1024 * 1024)} МБ · {multiple ? "можна кілька файлів" : "один файл за раз"}
-          </p>
-        </div>
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={(e) => {
-            e.stopPropagation();
-            open();
-          }}
-        >
-          Обрати файл
-        </Button>
+        <UploadCloud className="size-10" />
+      </motion.div>
+      <div>
+        <p className="text-xl font-medium">
+          {isDragActive ? "Відпустіть файл тут" : "Перетягніть файл або натисніть"}
+        </p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          До {LIMITS.MAX_FILE_SIZE / (1024 * 1024)} МБ · {multiple ? `до ${MAX_BATCH_FILES} файлів` : "один файл за раз"}
+        </p>
       </div>
-
-      <div className="mt-4 flex flex-wrap gap-1.5">
-        {TO_MARKDOWN_FORMATS.filter((f) => f.implemented && f.ext !== "htm" && f.ext !== "yml").map(
-          (f) => (
-            <Badge key={f.ext} variant="secondary" className="font-normal">
-              {f.icon} {f.ext.toUpperCase()}
-            </Badge>
-          ),
-        )}
-        <Badge variant="outline" className="font-normal text-muted-foreground">
-          + Markdown
-        </Badge>
-      </div>
+      <Button
+        type="button"
+        variant="secondary"
+        onClick={(e) => {
+          e.stopPropagation();
+          open();
+        }}
+      >
+        Обрати файл
+      </Button>
     </div>
   );
 }
