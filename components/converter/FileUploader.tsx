@@ -64,11 +64,19 @@ export function FileUploader({
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
-    maxSize: LIMITS.MAX_FILE_SIZE,
-    maxFiles: multiple ? MAX_BATCH_FILES : 1,
-    multiple,
+    maxSize: 50 * 1024 * 1024,
+    maxFiles: 20,
+    multiple: true,
     noClick: Boolean(file),
     noKeyboard: Boolean(file),
+    onDropRejected: (rejections) => {
+      const msgs = rejections.map(r => {
+        if (r.errors[0]?.code === 'file-too-large') return `${r.file.name}: занадто великий (макс 50МБ)`;
+        if (r.errors[0]?.code === 'too-many-files') return 'Максимум 20 файлів за раз';
+        return `${r.file.name}: помилка завантаження`;
+      });
+      onReject(msgs.join('\n'));
+    },
   });
 
   if (file) {
@@ -103,7 +111,7 @@ export function FileUploader({
     <div
       {...getRootProps()}
       className={[
-        "relative mx-auto flex min-h-[320px] w-full cursor-pointer flex-col items-center justify-center gap-5 rounded-3xl border-2 border-dashed bg-card p-12 text-center shadow-sm transition-all duration-200 md:p-16",
+        "relative mx-auto flex min-h-[320px] w-[80%] cursor-pointer flex-col items-center justify-center gap-5 rounded-3xl border-2 border-dashed bg-card px-16 py-20 text-center shadow-sm transition-all duration-200",
         isDragActive
           ? "scale-[1.02] border-primary bg-primary/5 shadow-lg"
           : "border-border hover:border-primary/60 hover:bg-secondary/40",

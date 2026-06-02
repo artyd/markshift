@@ -8,12 +8,26 @@ import { toast } from "sonner";
 import { FileUploader } from "./FileUploader";
 import { FormatSelector } from "./FormatSelector";
 import { ConversionProgress } from "./ConversionProgress";
-import { ResultDownloader } from "./ResultDownloader";
 import { MarkdownPreview } from "./MarkdownPreview";
 import { BatchConverter } from "./BatchConverter";
 import { getExtension } from "@/lib/utils/fileDetector";
+import { formatSize } from "@/lib/utils/sizeFormatter";
 import { isMarkdownExt, findSourceFormat } from "@/lib/constants/formats";
 import type { ConversionResponse, ConversionSuccess } from "@/types/conversion";
+
+function handleDownload(result: ConversionSuccess) {
+  const bytes =
+    result.encoding === "base64"
+      ? Uint8Array.from(atob(result.content), (c) => c.charCodeAt(0))
+      : new TextEncoder().encode(result.content);
+  const blob = new Blob([bytes], { type: result.mimeType });
+  const a = Object.assign(document.createElement("a"), {
+    href: URL.createObjectURL(blob),
+    download: result.filename,
+  });
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
 
 type Phase = "idle" | "ready" | "converting" | "done" | "error";
 
@@ -206,14 +220,83 @@ export function ConverterZone() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="grid grid-cols-1 gap-4 lg:grid-cols-[2fr_3fr] lg:items-start"
           >
-            <ResultDownloader result={state.result} onReset={() => dispatch({ type: "clear" })} />
-            <MarkdownPreview
-              content={state.result.content}
-              mimeType={state.result.mimeType}
-              encoding={state.result.encoding}
-            />
+            <div style={{
+              display: 'grid', gridTemplateColumns: '1fr 1fr',
+              gap: '24px', width: '90%', margin: '0 auto',
+            }}>
+              {/* Left column: result info + actions */}
+              <div style={{
+                background: 'white', borderRadius: '20px',
+                border: '1px solid #E8E8E8', padding: '40px',
+                display: 'flex', flexDirection: 'column', gap: '16px',
+              }}>
+                <div style={{
+                  width: '56px', height: '56px', borderRadius: '16px',
+                  background: '#F0FFF4', border: '1px solid #BBF7D0',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 13l4 4L19 7" stroke="#22C55E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+
+                <div>
+                  <div style={{ fontSize: '22px', fontWeight: 700, color: '#0F172A' }}>Файл готовий!</div>
+                  <div style={{ fontSize: '14px', color: '#888', marginTop: '4px' }}>{state.result.filename}</div>
+                </div>
+
+                <button
+                  onClick={() => handleDownload(state.result!)}
+                  style={{
+                    width: '100%', padding: '16px', borderRadius: '12px',
+                    background: '#1a1a1a', color: 'white', border: 'none',
+                    fontSize: '15px', fontWeight: 600, cursor: 'pointer',
+                    transition: 'background 0.2s',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#374151')}
+                  onMouseLeave={e => (e.currentTarget.style.background = '#1a1a1a')}
+                >
+                  ↓ Завантажити {state.result.filename}
+                </button>
+
+                <button
+                  onClick={() => dispatch({ type: 'clear' })}
+                  style={{
+                    width: '100%', padding: '14px', borderRadius: '12px',
+                    background: 'transparent', color: '#555',
+                    border: '1px solid #E2E8F0', fontSize: '14px', cursor: 'pointer',
+                    transition: 'background 0.2s',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#F8FAFC')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                >
+                  ↩ Конвертувати ще один файл
+                </button>
+
+                <div style={{
+                  background: '#FAFAFA', borderRadius: '12px', padding: '16px',
+                  fontSize: '13px', color: '#666', lineHeight: 2,
+                }}>
+                  <div>📁 {getExtension(state.file?.name ?? '').toUpperCase()} → {state.targetExt.toUpperCase()}</div>
+                  <div>📏 {formatSize(state.file?.size ?? 0)} → {formatSize(state.result.size)}</div>
+                  <div>⏱ {state.result.processingTime}мс</div>
+                </div>
+              </div>
+
+              {/* Right column: Markdown preview */}
+              <div style={{
+                background: 'white', borderRadius: '20px',
+                border: '1px solid #E8E8E8', overflow: 'hidden',
+                maxHeight: '520px', display: 'flex', flexDirection: 'column',
+              }}>
+                <MarkdownPreview
+                  content={state.result.preview ?? state.result.content}
+                  mimeType={state.result.mimeType}
+                  encoding={state.result.encoding}
+                />
+              </div>
+            </div>
           </motion.div>
         )}
 

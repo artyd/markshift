@@ -148,6 +148,7 @@
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
   }
 }
 
@@ -271,11 +272,52 @@
   box-shadow: 0 8px 20px hsl(0 0% 0% / 0.4);
 }
 
+/* HeroSection responsive grid — single column on mobile. */
+@media (max-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    padding: 0 24px !important;
+    gap: 40px !important;
+  }
+}
+
+/* ScrollIndicator bounce animation. */
+@keyframes bounce-scroll {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(8px); }
+}
+
+/* AnimatedBackground floating items. */
+@keyframes float-0 {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  33%      { transform: translateY(-20px) translateX(8px); }
+  66%      { transform: translateY(10px) translateX(-5px); }
+}
+@keyframes float-1 {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50%      { transform: translateY(-30px) translateX(-10px); }
+}
+@keyframes float-2 {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  25%      { transform: translateY(15px) translateX(12px); }
+  75%      { transform: translateY(-15px) translateX(-8px); }
+}
+@keyframes bg-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* @uiw/react-md-editor overrides. */
+.w-md-editor { border-radius: 0 !important; box-shadow: none !important; }
+.w-md-editor-toolbar { border-bottom: 1px solid #E8E8E8 !important; background: #FAFAFA !important; }
+.wmde-markdown { background: white !important; font-size: 15px !important; line-height: 1.8 !important; }
+
 @media (prefers-reduced-motion: reduce) {
   .animate-mesh,
   .carousel-row-left,
   .carousel-row-right,
-  .animate-shimmer::after {
+  .animate-shimmer::after,
+  [style*="animation"] {
     animation: none !important;
   }
 }

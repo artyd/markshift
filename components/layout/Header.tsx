@@ -12,7 +12,6 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
-import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SITE } from "@/lib/constants/site";
 
@@ -28,11 +27,20 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-[72px] max-w-6xl items-center justify-between px-4 md:px-8">
-        <Link href="/" className="flex items-center gap-2.5 font-semibold">
-          <Logo size={36} />
-          <span className="text-lg">
-            Mark<span className="text-gradient">Shift</span>
-          </span>
+        <Link href="/" className="flex items-center gap-2.5">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <rect width="36" height="36" rx="10" fill="hsl(var(--primary))"/>
+            <path d="M8 26V10l10 10 10-10v16" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <path d="M22 20h6M25 17l3 3-3 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          <div>
+            <div style={{ fontSize: '17px', fontWeight: 700, letterSpacing: '-0.4px', lineHeight: 1, color: 'hsl(var(--foreground))' }}>
+              MarkShift
+            </div>
+            <div style={{ fontSize: '10px', color: '#999', letterSpacing: '0.5px', lineHeight: 1, marginTop: '2px' }}>
+              FILE CONVERTER
+            </div>
+          </div>
         </Link>
 
         {/* Desktop nav */}
@@ -76,10 +84,12 @@ export function Header() {
           </SheetTrigger>
           <SheetContent side="right" className="w-64">
             <SheetTitle className="flex items-center gap-2">
-              <Logo size={28} />
-              <span>
-                Mark<span className="text-gradient">Shift</span>
-              </span>
+              <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
+                <rect width="36" height="36" rx="10" fill="hsl(var(--primary))"/>
+                <path d="M8 26V10l10 10 10-10v16" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                <path d="M22 20h6M25 17l3 3-3 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <span style={{ fontWeight: 700 }}>MarkShift</span>
             </SheetTitle>
             <nav className="mt-4 flex flex-col gap-1">
               {NAV_LINKS.map((l) => (
