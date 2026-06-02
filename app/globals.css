@@ -1,0 +1,276 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* MarkShift — dark-only brand palette (cyan primary + violet accent). */
+:root,
+.dark {
+  --background: hsl(220 20% 6%);
+  --foreground: hsl(210 20% 94%);
+  --card: hsl(220 18% 9%);
+  --card-foreground: hsl(210 20% 94%);
+  --popover: hsl(220 18% 9%);
+  --popover-foreground: hsl(210 20% 94%);
+  --primary: hsl(195 85% 55%);
+  --primary-foreground: hsl(220 20% 6%);
+  --secondary: hsl(220 15% 14%);
+  --secondary-foreground: hsl(210 20% 80%);
+  --muted: hsl(220 15% 14%);
+  --muted-foreground: hsl(210 10% 55%);
+  --accent: hsl(275 70% 65%);
+  --accent-foreground: hsl(210 20% 94%);
+  --destructive: hsl(0 72% 55%);
+  --border: hsl(220 15% 16%);
+  --input: hsl(220 15% 14%);
+  --ring: hsl(195 85% 55%);
+  --chart-1: hsl(195 85% 55%);
+  --chart-2: hsl(275 70% 65%);
+  --chart-3: hsl(160 70% 50%);
+  --chart-4: hsl(40 90% 60%);
+  --chart-5: hsl(330 75% 60%);
+  --radius: 0.75rem;
+  --sidebar: hsl(220 18% 9%);
+  --sidebar-foreground: hsl(210 20% 94%);
+  --sidebar-primary: hsl(195 85% 55%);
+  --sidebar-primary-foreground: hsl(220 20% 6%);
+  --sidebar-accent: hsl(275 70% 65%);
+  --sidebar-accent-foreground: hsl(210 20% 94%);
+  --sidebar-border: hsl(220 15% 16%);
+  --sidebar-ring: hsl(195 85% 55%);
+
+  /* Custom brand tokens. */
+  --gradient-primary: linear-gradient(135deg, hsl(195 85% 55%), hsl(275 70% 65%));
+  --gradient-surface: linear-gradient(180deg, hsl(220 20% 8%), hsl(220 20% 6%));
+  --glow-primary: 0 0 40px hsl(195 85% 55% / 0.3);
+  --glow-accent: 0 0 40px hsl(275 70% 65% / 0.3);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+    color-scheme: dark;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background-image: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .bg-gradient-primary {
+    background-image: var(--gradient-primary);
+  }
+  .glow-primary {
+    box-shadow: var(--glow-primary);
+  }
+  .glow-accent {
+    box-shadow: var(--glow-accent);
+  }
+}
+
+/* Animated mesh background for the hero. */
+@keyframes mesh-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2%, -2%, 0) scale(1.05);
+  }
+}
+.animate-mesh {
+  animation: mesh-drift 18s ease-in-out infinite;
+}
+
+/* Shimmer sweep used on the conversion progress bar. */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.animate-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(0 0% 100% / 0.25),
+    transparent
+  );
+  animation: shimmer 1.4s infinite;
+}
+
+/* Custom scrollbars. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(220 15% 22%) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: hsl(220 15% 22%);
+  border-radius: 9999px;
+}
+
+/* Rendered Markdown preview typography (no Tailwind typography plugin needed). */
+.md-preview {
+  color: var(--foreground);
+  line-height: 1.7;
+  word-wrap: break-word;
+}
+.md-preview > :first-child {
+  margin-top: 0;
+}
+.md-preview h1,
+.md-preview h2,
+.md-preview h3,
+.md-preview h4 {
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 1.5em 0 0.6em;
+}
+.md-preview h1 {
+  font-size: 1.8rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3em;
+}
+.md-preview h2 {
+  font-size: 1.45rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.25em;
+}
+.md-preview h3 {
+  font-size: 1.2rem;
+}
+.md-preview p,
+.md-preview ul,
+.md-preview ol,
+.md-preview blockquote,
+.md-preview table,
+.md-preview pre {
+  margin: 0.85em 0;
+}
+.md-preview a {
+  color: var(--primary);
+  text-decoration: underline;
+}
+.md-preview ul,
+.md-preview ol {
+  padding-left: 1.5em;
+}
+.md-preview ul {
+  list-style: disc;
+}
+.md-preview ol {
+  list-style: decimal;
+}
+.md-preview li {
+  margin: 0.3em 0;
+}
+.md-preview blockquote {
+  border-left: 3px solid var(--primary);
+  padding-left: 1em;
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+.md-preview code {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.875em;
+  background: hsl(220 15% 14%);
+  padding: 0.15em 0.4em;
+  border-radius: 0.35em;
+}
+.md-preview pre {
+  background: hsl(220 18% 11%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1em;
+  overflow-x: auto;
+}
+.md-preview pre code {
+  background: transparent;
+  padding: 0;
+  font-size: 0.85em;
+}
+.md-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+.md-preview th,
+.md-preview td {
+  border: 1px solid var(--border);
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+.md-preview th {
+  background: hsl(220 15% 14%);
+  font-weight: 600;
+}
+.md-preview img {
+  max-width: 100%;
+  border-radius: var(--radius);
+}
+.md-preview hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5em 0;
+}
