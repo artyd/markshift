@@ -15,7 +15,7 @@ function extractTextFromPdf2Json(data: any): string {
     for (const text of page.Texts ?? []) {
       const y = Math.round(text.y * 10);
       const decoded = (text.R ?? [])
-        .map((r: any) => decodeURIComponent(r.T ?? ""))
+        .map((r: any) => { try { return decodeURIComponent(r.T ?? ""); } catch { return r.T ?? ""; } })
         .join("");
       if (!decoded.trim()) continue;
 
