@@ -73,9 +73,10 @@ export function FileUploader({
         {...getRootProps()}
         style={{
           width: '100%',
+          aspectRatio: '16 / 11',
           border: isDragActive ? '2px dashed #111111' : '2px dashed #CCCCCC',
           borderRadius: '16px',
-          padding: '72px 48px',
+          padding: '48px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -83,7 +84,6 @@ export function FileUploader({
           cursor: 'pointer',
           background: isDragActive ? '#F5F5F5' : '#FAFAFA',
           transition: 'all 0.2s ease',
-          minHeight: '260px',
           textAlign: 'center',
         }}
       >

@@ -278,18 +278,18 @@ export function ConverterZone() {
                 {/* Three action cards */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', width: '100%' }}>
 
-                  {/* DOWNLOAD — foreground fill */}
+                  {/* DOWNLOAD */}
                   <button
                     onClick={handleDownloadAll}
                     style={{
                       padding: '28px 20px',
-                      border: '1.5px solid #111111', borderRadius: '16px',
-                      background: '#111111', color: '#FFFFFF', cursor: 'pointer',
+                      border: '1.5px solid #E0E0E0', borderRadius: '16px',
+                      background: '#FFFFFF', color: '#111111', cursor: 'pointer',
                       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px',
                       transition: 'all 0.22s ease',
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.2)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#111111'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#E0E0E0'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
                   >
                     <span style={{ fontSize: '32px' }}>⬇</span>
                     <div>
