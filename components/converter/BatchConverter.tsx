@@ -117,15 +117,21 @@ export function BatchConverter({ files, onReset }: { files: File[]; onReset: () 
         <div style={{
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
-          gap: '24px', padding: '48px', width: '100%',
+          gap: '28px', padding: '48px', width: '100%',
         }}>
-          <div style={{
-            width: '56px', height: '56px',
-            border: '3px solid #E0E0E0',
-            borderTop: '3px solid #111111',
-            borderRadius: '50%',
-            animation: 'spin 0.8s linear infinite',
-          }} />
+          <div style={{ width: '100%', maxWidth: '320px' }}>
+            <div style={{
+              height: '3px', background: 'hsl(var(--muted))',
+              borderRadius: '9999px', overflow: 'hidden', position: 'relative',
+            }}>
+              <div style={{
+                position: 'absolute', top: 0, left: 0, bottom: 0,
+                width: '35%', background: 'hsl(var(--foreground))',
+                borderRadius: '9999px',
+                animation: 'slide-progress 1.2s ease-in-out infinite',
+              }} />
+            </div>
+          </div>
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontSize: '18px', fontWeight: 600, color: 'hsl(var(--foreground))', marginBottom: '6px' }}>
               Конвертую {files.length} файли...
