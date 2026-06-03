@@ -1,14 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { CheckCircle2, Loader2, AlertCircle, FileText, Download, RotateCcw, Package } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { formatSize } from "@/lib/utils/sizeFormatter";
 import { getExtension } from "@/lib/utils/fileDetector";
 import { isMarkdownExt, findSourceFormat } from "@/lib/constants/formats";
 import { downloadZipBundle, type BundleEntry } from "@/lib/utils/zipBundle";
+import { PreviewModal } from "./PreviewModal";
 import type { ConversionResponse, ConversionSuccess } from "@/types/conversion";
 
 type ItemStatus = "pending" | "converting" | "done" | "error" | "skipped";
@@ -21,7 +18,6 @@ interface BatchItem {
   error: string | null;
 }
 
-/** Pick the default target format for a file (mirrors single-file logic). */
 function defaultTarget(file: File): { ext: string; supported: boolean } {
   const ext = getExtension(file.name);
   if (isMarkdownExt(ext)) return { ext: "html", supported: true };
@@ -42,6 +38,7 @@ export function BatchConverter({ files, onReset }: { files: File[]; onReset: () 
     }),
   );
   const [running, setRunning] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const startedRef = useRef(false);
 
   const updateItem = useCallback((index: number, patch: Partial<BatchItem>) => {
@@ -71,9 +68,9 @@ export function BatchConverter({ files, onReset }: { files: File[]; onReset: () 
       }
     }
     setRunning(false);
+    toast.success("Конвертація завершена!");
   }, [files, updateItem]);
 
-  // Kick off conversion once on mount.
   useEffect(() => {
     if (startedRef.current) return;
     startedRef.current = true;
@@ -81,6 +78,7 @@ export function BatchConverter({ files, onReset }: { files: File[]; onReset: () 
   }, [runBatch]);
 
   const doneItems = items.filter((it) => it.status === "done" && it.result);
+  const doneCount = items.filter((it) => it.status === "done" || it.status === "error" || it.status === "skipped").length;
   const allFinished = !running && items.every((it) => it.status !== "pending" && it.status !== "converting");
 
   const downloadAll = async () => {
@@ -102,71 +100,134 @@ export function BatchConverter({ files, onReset }: { files: File[]; onReset: () 
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-2">
-        <h3 className="flex items-center gap-2 font-medium">
-          <Package className="size-5 text-primary" />
-          Пакетна конвертація · {files.length} файл(ів)
-        </h3>
-        <Button variant="ghost" size="sm" onClick={onReset} disabled={running}>
-          <RotateCcw className="size-4" />
-          Скинути
-        </Button>
-      </div>
+    <>
+      <PreviewModal
+        isOpen={previewOpen}
+        onClose={() => setPreviewOpen(false)}
+        files={doneItems.map(it => ({
+          filename: it.result!.filename,
+          content: it.result!.content ?? it.result!.preview ?? '',
+          mimeType: it.result!.mimeType,
+          isText: it.result!.encoding === 'utf-8',
+        }))}
+      />
 
-      <ul className="flex flex-col gap-2">
-        {items.map((it, i) => (
-          <motion.li
-            key={`${it.file.name}-${i}`}
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-3 rounded-xl border border-border bg-card p-3"
-          >
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-              <FileText className="size-5" />
+      {/* Converting — spinner */}
+      {!allFinished && (
+        <div style={{
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          gap: '24px', padding: '48px', width: '100%',
+        }}>
+          <div style={{
+            width: '56px', height: '56px',
+            border: '3px solid #E0E0E0',
+            borderTop: '3px solid #111111',
+            borderRadius: '50%',
+            animation: 'spin 0.8s linear infinite',
+          }} />
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '18px', fontWeight: 600, color: 'hsl(var(--foreground))', marginBottom: '6px' }}>
+              Конвертую {files.length} файли...
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium" title={it.file.name}>
-                {it.file.name}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {formatSize(it.file.size)} → .{it.targetExt}
-                {it.error && (
-                  <span className="text-destructive"> · {it.error}</span>
-                )}
-              </p>
+            <div style={{ fontSize: '14px', color: 'hsl(var(--muted-foreground))' }}>
+              {doneCount} з {files.length} готово
             </div>
-            <StatusIcon status={it.status} />
-          </motion.li>
-        ))}
-      </ul>
+          </div>
+        </div>
+      )}
 
-      <div className="flex gap-2">
-        <Button
-          onClick={downloadAll}
-          disabled={!allFinished || doneItems.length === 0}
-          className="flex-1 bg-gradient-primary text-primary-foreground"
-        >
-          <Download className="size-4" />
-          {running
-            ? "Конвертація…"
-            : `Завантажити всі (${doneItems.length}) у .zip`}
-        </Button>
-      </div>
-    </div>
+      {/* Done — three cards */}
+      {allFinished && (
+        <div style={{
+          width: '100%', maxWidth: '700px',
+          margin: '0 auto',
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', gap: '32px',
+        }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '48px', marginBottom: '12px' }}>✓</div>
+            <div style={{ fontSize: '20px', fontWeight: 700, color: 'hsl(var(--foreground))' }}>
+              {doneItems.length} з {files.length} файли готові
+            </div>
+            <div style={{ fontSize: '14px', color: 'hsl(var(--muted-foreground))', marginTop: '4px' }}>
+              Конвертація завершена успішно
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', width: '100%' }}>
+
+            {/* DOWNLOAD */}
+            <button
+              onClick={downloadAll}
+              disabled={doneItems.length === 0}
+              style={{
+                padding: '28px 20px', borderRadius: '16px',
+                border: '1.5px solid hsl(var(--foreground))',
+                background: 'hsl(var(--foreground))', color: 'hsl(var(--background))', cursor: 'pointer',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px',
+                transition: 'all 0.22s ease',
+                opacity: doneItems.length === 0 ? 0.5 : 1,
+              }}
+              onMouseEnter={e => { if (doneItems.length > 0) { e.currentTarget.style.opacity = '0.85'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.2)'; } }}
+              onMouseLeave={e => { e.currentTarget.style.opacity = doneItems.length === 0 ? '0.5' : '1'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+            >
+              <span style={{ fontSize: '32px' }}>⬇</span>
+              <div>
+                <div style={{ fontSize: '16px', fontWeight: 700 }}>Скачати</div>
+                <div style={{ fontSize: '12px', opacity: 0.7, marginTop: '2px' }}>
+                  {doneItems.length} файли · .zip
+                </div>
+              </div>
+            </button>
+
+            {/* PREVIEW */}
+            <button
+              onClick={() => setPreviewOpen(true)}
+              disabled={doneItems.length === 0}
+              style={{
+                padding: '28px 20px', borderRadius: '16px',
+                border: '1.5px solid hsl(var(--border))',
+                background: 'hsl(var(--card))', color: 'hsl(var(--foreground))', cursor: 'pointer',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px',
+                transition: 'all 0.22s ease',
+                opacity: doneItems.length === 0 ? 0.5 : 1,
+              }}
+              onMouseEnter={e => { if (doneItems.length > 0) { e.currentTarget.style.borderColor = 'hsl(var(--foreground))'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)'; } }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'hsl(var(--border))'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+            >
+              <span style={{ fontSize: '32px' }}>👁</span>
+              <div>
+                <div style={{ fontSize: '16px', fontWeight: 700 }}>Перегляд</div>
+                <div style={{ fontSize: '12px', color: 'hsl(var(--muted-foreground))', marginTop: '2px' }}>
+                  {doneItems.length} вкладки
+                </div>
+              </div>
+            </button>
+
+            {/* BACK */}
+            <button
+              onClick={onReset}
+              style={{
+                padding: '28px 20px', borderRadius: '16px',
+                border: '1.5px solid hsl(var(--border))',
+                background: 'hsl(var(--card))', color: 'hsl(var(--foreground))', cursor: 'pointer',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px',
+                transition: 'all 0.22s ease',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'hsl(var(--foreground))'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'hsl(var(--border))'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+            >
+              <span style={{ fontSize: '32px' }}>↩</span>
+              <div>
+                <div style={{ fontSize: '16px', fontWeight: 700 }}>Назад</div>
+                <div style={{ fontSize: '12px', color: 'hsl(var(--muted-foreground))', marginTop: '2px' }}>Конвертувати ще</div>
+              </div>
+            </button>
+
+          </div>
+        </div>
+      )}
+    </>
   );
-}
-
-function StatusIcon({ status }: { status: ItemStatus }) {
-  switch (status) {
-    case "converting":
-      return <Loader2 className="size-5 animate-spin text-primary" />;
-    case "done":
-      return <CheckCircle2 className="size-5 text-primary" />;
-    case "error":
-    case "skipped":
-      return <AlertCircle className="size-5 text-destructive" />;
-    default:
-      return <div className="size-5 rounded-full border-2 border-muted-foreground/30" />;
-  }
 }
