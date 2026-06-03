@@ -6,24 +6,24 @@ export function ConverterPage() {
     <div style={{
       width: '100%', height: '100%',
       display: 'flex', flexDirection: 'column',
-      background: 'hsl(var(--muted) / 0.3)',
+      background: '#F8F8F8',
       overflow: 'hidden',
     }}>
 
       <div style={{
-        padding: '32px 80px 24px',
-        borderBottom: '1px solid hsl(var(--border))',
-        background: 'hsl(var(--background))',
+        padding: '28px 48px 20px',
+        borderBottom: '1px solid #E0E0E0',
+        background: '#FFFFFF',
         flexShrink: 0,
       }}>
         <h2 style={{
           fontSize: '28px', fontWeight: 700, letterSpacing: '-0.5px',
-          color: 'hsl(var(--foreground))', margin: 0,
+          color: '#111111', margin: 0,
         }}>
           📄 Конвертація файлів
         </h2>
         <p style={{
-          fontSize: '14px', color: 'hsl(var(--muted-foreground))',
+          fontSize: '14px', color: '#888888',
           margin: '4px 0 0',
         }}>
           Завантаж файл — отримай Markdown або будь-який інший формат
@@ -33,7 +33,7 @@ export function ConverterPage() {
       <div style={{
         flex: 1, overflow: 'auto',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: '32px 48px',
+        padding: '28px 32px',
       }}>
         <ConverterZone />
       </div>

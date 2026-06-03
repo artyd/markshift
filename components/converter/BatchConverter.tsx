@@ -121,22 +121,22 @@ export function BatchConverter({ files, onReset }: { files: File[]; onReset: () 
         }}>
           <div style={{ width: '100%', maxWidth: '320px' }}>
             <div style={{
-              height: '3px', background: 'hsl(var(--muted))',
+              height: '3px', background: '#F0F0F0',
               borderRadius: '9999px', overflow: 'hidden', position: 'relative',
             }}>
               <div style={{
                 position: 'absolute', top: 0, left: 0, bottom: 0,
-                width: '35%', background: 'hsl(var(--foreground))',
+                width: '35%', background: '#111111',
                 borderRadius: '9999px',
                 animation: 'slide-progress 1.2s ease-in-out infinite',
               }} />
             </div>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '18px', fontWeight: 600, color: 'hsl(var(--foreground))', marginBottom: '6px' }}>
+            <div style={{ fontSize: '18px', fontWeight: 600, color: '#111111', marginBottom: '6px' }}>
               Конвертую {files.length} файли...
             </div>
-            <div style={{ fontSize: '14px', color: 'hsl(var(--muted-foreground))' }}>
+            <div style={{ fontSize: '14px', color: '#888888' }}>
               {doneCount} з {files.length} готово
             </div>
           </div>
@@ -153,10 +153,10 @@ export function BatchConverter({ files, onReset }: { files: File[]; onReset: () 
         }}>
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontSize: '48px', marginBottom: '12px' }}>✓</div>
-            <div style={{ fontSize: '20px', fontWeight: 700, color: 'hsl(var(--foreground))' }}>
+            <div style={{ fontSize: '20px', fontWeight: 700, color: '#111111' }}>
               {doneItems.length} з {files.length} файли готові
             </div>
-            <div style={{ fontSize: '14px', color: 'hsl(var(--muted-foreground))', marginTop: '4px' }}>
+            <div style={{ fontSize: '14px', color: '#888888', marginTop: '4px' }}>
               Конвертація завершена успішно
             </div>
           </div>
@@ -169,8 +169,8 @@ export function BatchConverter({ files, onReset }: { files: File[]; onReset: () 
               disabled={doneItems.length === 0}
               style={{
                 padding: '28px 20px', borderRadius: '16px',
-                border: '1.5px solid hsl(var(--foreground))',
-                background: 'hsl(var(--foreground))', color: 'hsl(var(--background))', cursor: 'pointer',
+                border: '1.5px solid #111111',
+                background: '#111111', color: '#FFFFFF', cursor: 'pointer',
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px',
                 transition: 'all 0.22s ease',
                 opacity: doneItems.length === 0 ? 0.5 : 1,
@@ -193,19 +193,19 @@ export function BatchConverter({ files, onReset }: { files: File[]; onReset: () 
               disabled={doneItems.length === 0}
               style={{
                 padding: '28px 20px', borderRadius: '16px',
-                border: '1.5px solid hsl(var(--border))',
-                background: 'hsl(var(--card))', color: 'hsl(var(--foreground))', cursor: 'pointer',
+                border: '1.5px solid #E0E0E0',
+                background: '#FFFFFF', color: '#111111', cursor: 'pointer',
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px',
                 transition: 'all 0.22s ease',
                 opacity: doneItems.length === 0 ? 0.5 : 1,
               }}
-              onMouseEnter={e => { if (doneItems.length > 0) { e.currentTarget.style.borderColor = 'hsl(var(--foreground))'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)'; } }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'hsl(var(--border))'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+              onMouseEnter={e => { if (doneItems.length > 0) { e.currentTarget.style.borderColor = '#111111'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)'; } }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#E0E0E0'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
             >
               <span style={{ fontSize: '32px' }}>👁</span>
               <div>
                 <div style={{ fontSize: '16px', fontWeight: 700 }}>Перегляд</div>
-                <div style={{ fontSize: '12px', color: 'hsl(var(--muted-foreground))', marginTop: '2px' }}>
+                <div style={{ fontSize: '12px', color: '#888888', marginTop: '2px' }}>
                   {doneItems.length} вкладки
                 </div>
               </div>
@@ -216,18 +216,18 @@ export function BatchConverter({ files, onReset }: { files: File[]; onReset: () 
               onClick={onReset}
               style={{
                 padding: '28px 20px', borderRadius: '16px',
-                border: '1.5px solid hsl(var(--border))',
-                background: 'hsl(var(--card))', color: 'hsl(var(--foreground))', cursor: 'pointer',
+                border: '1.5px solid #E0E0E0',
+                background: '#FFFFFF', color: '#111111', cursor: 'pointer',
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px',
                 transition: 'all 0.22s ease',
               }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'hsl(var(--foreground))'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'hsl(var(--border))'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#111111'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#E0E0E0'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
             >
               <span style={{ fontSize: '32px' }}>↩</span>
               <div>
                 <div style={{ fontSize: '16px', fontWeight: 700 }}>Назад</div>
-                <div style={{ fontSize: '12px', color: 'hsl(var(--muted-foreground))', marginTop: '2px' }}>Конвертувати ще</div>
+                <div style={{ fontSize: '12px', color: '#888888', marginTop: '2px' }}>Конвертувати ще</div>
               </div>
             </button>
 

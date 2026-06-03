@@ -64,9 +64,9 @@ export function PreviewModal({ isOpen, onClose, files }: PreviewModalProps) {
             style={{
               pointerEvents: 'all',
               width: '80vw', height: '82vh',
-              background: 'hsl(var(--card))',
+              background: '#FFFFFF',
               borderRadius: '16px',
-              border: '1px solid hsl(var(--border))',
+              border: '1px solid #E0E0E0',
               boxShadow: '0 40px 100px rgba(0,0,0,0.35)',
               display: 'flex', flexDirection: 'column',
               overflow: 'hidden',
@@ -76,8 +76,8 @@ export function PreviewModal({ isOpen, onClose, files }: PreviewModalProps) {
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '0 24px', height: '56px',
-              borderBottom: '1px solid hsl(var(--border))',
-              background: 'hsl(var(--muted) / 0.4)', flexShrink: 0,
+              borderBottom: '1px solid #E0E0E0',
+              background: '#F5F5F5', flexShrink: 0,
             }}>
               <div style={{ display: 'flex', gap: '2px', overflowX: 'auto', flex: 1 }}>
                 {files.map((file, i) => (
@@ -85,8 +85,8 @@ export function PreviewModal({ isOpen, onClose, files }: PreviewModalProps) {
                     padding: '6px 16px', borderRadius: '8px', border: 'none',
                     cursor: 'pointer', fontSize: '13px',
                     fontWeight: activeTab === i ? 700 : 400,
-                    background: activeTab === i ? 'hsl(var(--foreground))' : 'transparent',
-                    color: activeTab === i ? 'hsl(var(--background))' : 'hsl(var(--muted-foreground))',
+                    background: activeTab === i ? '#111111' : 'transparent',
+                    color: activeTab === i ? '#FFFFFF' : '#888888',
                     whiteSpace: 'nowrap', transition: 'all 0.15s', flexShrink: 0,
                   }}>
                     {file.filename.endsWith('.md') ? '📝 ' :
@@ -103,29 +103,29 @@ export function PreviewModal({ isOpen, onClose, files }: PreviewModalProps) {
                 aria-label="Закрити"
                 style={{
                   width: '36px', height: '36px', borderRadius: '50%',
-                  border: '1px solid hsl(var(--border))', background: 'hsl(var(--muted))',
-                  color: 'hsl(var(--muted-foreground))', fontSize: '16px', cursor: 'pointer',
+                  border: '1px solid #E0E0E0', background: '#F0F0F0',
+                  color: '#888888', fontSize: '16px', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   flexShrink: 0, marginLeft: '16px', transition: 'all 0.15s',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'hsl(var(--foreground))'; e.currentTarget.style.color = 'hsl(var(--background))'; e.currentTarget.style.borderColor = 'hsl(var(--foreground))'; }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'hsl(var(--muted))'; e.currentTarget.style.color = 'hsl(var(--muted-foreground))'; e.currentTarget.style.borderColor = 'hsl(var(--border))'; }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#111111'; e.currentTarget.style.color = '#FFFFFF'; e.currentTarget.style.borderColor = '#111111'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = '#F0F0F0'; e.currentTarget.style.color = '#888888'; e.currentTarget.style.borderColor = '#E0E0E0'; }}
               >✕</button>
             </div>
 
             {/* Content */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '40px 56px', background: 'hsl(var(--card))' }}>
+            <div style={{ flex: 1, overflowY: 'auto', padding: '40px 56px', background: '#FFFFFF' }}>
               {currentFile?.isText ? (
                 currentFile.filename.endsWith('.md') ? (
                   <div
                     className="md-preview"
-                    style={{ fontSize: '15px', lineHeight: 1.8, color: 'hsl(var(--foreground))' }}
+                    style={{ fontSize: '15px', lineHeight: 1.8, color: '#111111' }}
                     dangerouslySetInnerHTML={{ __html: renderedHtml }}
                   />
                 ) : (
                   <pre style={{
                     fontFamily: 'monospace', fontSize: '14px', lineHeight: 1.7,
-                    color: 'hsl(var(--foreground))', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0,
+                    color: '#111111', whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0,
                   }}>
                     {currentFile.content}
                   </pre>
@@ -137,10 +137,10 @@ export function PreviewModal({ isOpen, onClose, files }: PreviewModalProps) {
                   height: '100%', gap: '16px',
                 }}>
                   <span style={{ fontSize: '64px' }}>📄</span>
-                  <div style={{ fontSize: '18px', fontWeight: 600, color: 'hsl(var(--foreground))' }}>
+                  <div style={{ fontSize: '18px', fontWeight: 600, color: '#111111' }}>
                     {currentFile?.filename}
                   </div>
-                  <div style={{ fontSize: '14px', color: 'hsl(var(--muted-foreground))' }}>
+                  <div style={{ fontSize: '14px', color: '#888888' }}>
                     Цей формат не підтримує preview — завантаж файл щоб відкрити
                   </div>
                 </div>

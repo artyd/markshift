@@ -73,34 +73,35 @@ export function FileUploader({
         {...getRootProps()}
         style={{
           width: '100%',
-          maxWidth: '100%',
-          margin: '0 auto',
-          border: '1px solid #E0E0E0',
-          borderRadius: '12px',
-          padding: '56px 48px',
+          border: isDragActive ? '2px dashed #111111' : '2px dashed #CCCCCC',
+          borderRadius: '16px',
+          padding: '72px 48px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           cursor: 'pointer',
-          background: isDragActive ? '#F5F5F5' : '#FFFFFF',
+          background: isDragActive ? '#F5F5F5' : '#FAFAFA',
           transition: 'all 0.2s ease',
-          minHeight: '200px',
+          minHeight: '260px',
+          textAlign: 'center',
         }}
       >
         <input {...getInputProps()} />
-        <div style={{
-          width: '48px', height: '48px',
-          border: '1.5px solid #111',
-          borderRadius: '50%',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginBottom: '16px',
-          fontSize: '20px', color: '#111',
-        }}>↑</div>
-        <div style={{ fontSize: '16px', fontWeight: 600, color: '#111', marginBottom: '6px' }}>
-          {isDragActive ? 'Відпусти файли...' : 'Перетягни або клікни'}
+        <svg
+          width="52" height="52" viewBox="0 0 24 24" fill="none"
+          stroke={isDragActive ? '#111111' : '#BBBBBB'}
+          strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+          style={{ marginBottom: '20px', transition: 'stroke 0.2s' }}
+        >
+          <polyline points="16 16 12 12 8 16" />
+          <line x1="12" y1="12" x2="12" y2="21" />
+          <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+        </svg>
+        <div style={{ fontSize: '17px', fontWeight: 600, color: '#111111', marginBottom: '8px' }}>
+          {isDragActive ? 'Відпусти файли...' : 'Перетягни або клікни для завантаження'}
         </div>
-        <div style={{ fontSize: '13px', color: '#888' }}>
+        <div style={{ fontSize: '13px', color: '#AAAAAA' }}>
           PDF, DOCX, XLSX, PPTX, HTML, CSV та інші · до 50МБ
         </div>
       </div>
@@ -109,7 +110,7 @@ export function FileUploader({
 
   // HAS FILES state
   return (
-    <div style={{ width: '100%', maxWidth: '100%', margin: '0 auto' }}>
+    <div style={{ width: '100%' }}>
       <div style={{
         display: 'flex',
         gap: '10px',
@@ -117,6 +118,8 @@ export function FileUploader({
         paddingBottom: '8px',
         marginBottom: '20px',
         scrollbarWidth: 'none',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
       } as React.CSSProperties}>
         {files.map((file) => {
           const ext = file.name.split('.').pop()?.toLowerCase() ?? 'file';
