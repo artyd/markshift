@@ -79,32 +79,110 @@ export function HomePage({ onNavigate }: HomePageProps) {
             ))}
           </div>
 
-          <div style={{ display: 'flex', gap: '12px' }}>
+          {/* Three nav buttons */}
+          <div style={{
+            display: 'flex',
+            gap: '10px',
+            marginTop: '32px',
+            flexWrap: 'wrap',
+          }}>
+
+            {/* PRIMARY: black fill */}
             <button
               onClick={() => onNavigate('converter')}
               style={{
-                padding: '14px 28px', borderRadius: '12px', border: 'none',
-                background: 'hsl(var(--primary))',
-                color: 'hsl(var(--primary-foreground))',
-                fontSize: '16px', fontWeight: 700, cursor: 'pointer',
+                padding: '12px 24px',
+                borderRadius: '10px',
+                border: '1.5px solid #111111',
+                background: '#111111',
+                color: '#FFFFFF',
+                fontSize: '15px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '7px',
                 transition: 'all 0.2s ease',
+                whiteSpace: 'nowrap',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = '#333333';
+                e.currentTarget.style.borderColor = '#333333';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = '#111111';
+                e.currentTarget.style.borderColor = '#111111';
+                e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
-              Почати конвертацію →
+              <span>📄</span> Конвертація
             </button>
+
+            {/* OUTLINE */}
+            <button
+              onClick={() => onNavigate('editor')}
+              style={{
+                padding: '12px 24px',
+                borderRadius: '10px',
+                border: '1.5px solid #E0E0E0',
+                background: 'transparent',
+                color: '#111111',
+                fontSize: '15px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '7px',
+                transition: 'all 0.2s ease',
+                whiteSpace: 'nowrap',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = '#111111';
+                e.currentTarget.style.background = '#F5F5F5';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = '#E0E0E0';
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              <span>✏️</span> Редагування
+            </button>
+
+            {/* OUTLINE */}
             <button
               onClick={() => onNavigate('reader')}
               style={{
-                padding: '14px 28px', borderRadius: '12px',
-                border: '1px solid hsl(var(--border))',
+                padding: '12px 24px',
+                borderRadius: '10px',
+                border: '1.5px solid #E0E0E0',
                 background: 'transparent',
-                color: 'hsl(var(--foreground))',
-                fontSize: '16px', fontWeight: 600, cursor: 'pointer',
+                color: '#111111',
+                fontSize: '15px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '7px',
                 transition: 'all 0.2s ease',
+                whiteSpace: 'nowrap',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = '#111111';
+                e.currentTarget.style.background = '#F5F5F5';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = '#E0E0E0';
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
-              Переглянути файл
+              <span>👁</span> Перегляд
             </button>
+
           </div>
         </div>
 

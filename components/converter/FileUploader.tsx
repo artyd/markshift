@@ -2,35 +2,38 @@
 
 import { useCallback } from "react";
 import { useDropzone, type FileRejection } from "react-dropzone";
-import { motion } from "framer-motion";
-import { UploadCloud, FileText, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { formatSize } from "@/lib/utils/sizeFormatter";
 import { getExtension } from "@/lib/utils/fileDetector";
 import { ACCEPTED_SOURCE_EXTS } from "@/lib/constants/formats";
 import { LIMITS } from "@/lib/constants/limits";
 
-/** Max files accepted in a single batch drop. */
-const MAX_BATCH_FILES = 20;
-
 interface FileUploaderProps {
-  file: File | null;
-  onSelect: (file: File) => void;
-  onClear: () => void;
+  files: File[];
+  onAddFiles: (files: File[]) => void;
+  onRemoveFile: (name: string) => void;
+  onConvert: () => void;
+  isConverting: boolean;
   onReject: (message: string) => void;
-  /** Allow selecting several files at once (batch mode). */
-  multiple?: boolean;
-  /** Called with all accepted files when `multiple` is enabled. */
-  onSelectMany?: (files: File[]) => void;
+}
+
+function getIcon(name: string) {
+  if (name.endsWith('.pdf'))  return '📕';
+  if (name.endsWith('.docx') || name.endsWith('.doc')) return '📄';
+  if (name.endsWith('.xlsx') || name.endsWith('.xls')) return '📊';
+  if (name.endsWith('.pptx')) return '📽️';
+  if (name.endsWith('.html') || name.endsWith('.htm')) return '🌐';
+  if (name.endsWith('.csv'))  return '📊';
+  if (name.endsWith('.json')) return '{}';
+  if (name.endsWith('.md'))   return '📝';
+  return '📄';
 }
 
 export function FileUploader({
-  file,
-  onSelect,
-  onClear,
+  files,
+  onAddFiles,
+  onRemoveFile,
+  onConvert,
+  isConverting,
   onReject,
-  multiple = false,
-  onSelectMany,
 }: FileUploaderProps) {
   const onDrop = useCallback(
     (accepted: File[], rejections: FileRejection[]) => {
@@ -40,8 +43,8 @@ export function FileUploader({
           code === "file-too-large"
             ? `Файл завеликий. Максимум ${LIMITS.MAX_FILE_SIZE / (1024 * 1024)} МБ.`
             : code === "too-many-files"
-              ? `Можна завантажити максимум ${MAX_BATCH_FILES} файлів за раз.`
-              : "Не вдалося прийняти файл.";
+            ? "Максимум 20 файлів за раз."
+            : "Не вдалося прийняти файл.";
         onReject(message);
         return;
       }
@@ -51,98 +54,159 @@ export function FileUploader({
         if (ACCEPTED_SOURCE_EXTS.includes(ext)) valid.push(f);
         else onReject(`Формат .${ext || "?"} не підтримується (${f.name}).`);
       }
-      if (valid.length === 0) return;
-
-      if (multiple && valid.length > 1 && onSelectMany) {
-        onSelectMany(valid);
-      } else {
-        onSelect(valid[0]);
-      }
+      if (valid.length > 0) onAddFiles(valid);
     },
-    [onSelect, onSelectMany, onReject, multiple],
+    [onAddFiles, onReject],
   );
 
-  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    maxSize: 50 * 1024 * 1024,
+    maxSize: LIMITS.MAX_FILE_SIZE,
     maxFiles: 20,
     multiple: true,
-    noClick: Boolean(file),
-    noKeyboard: Boolean(file),
-    onDropRejected: (rejections) => {
-      const msgs = rejections.map(r => {
-        if (r.errors[0]?.code === 'file-too-large') return `${r.file.name}: занадто великий (макс 50МБ)`;
-        if (r.errors[0]?.code === 'too-many-files') return 'Максимум 20 файлів за раз';
-        return `${r.file.name}: помилка завантаження`;
-      });
-      onReject(msgs.join('\n'));
-    },
   });
 
-  if (file) {
+  // IDLE state
+  if (files.length === 0) {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-center gap-4 rounded-xl border border-border bg-card p-4"
+      <div
+        {...getRootProps()}
+        style={{
+          width: '100%',
+          maxWidth: '600px',
+          margin: '0 auto',
+          border: '1px solid #E0E0E0',
+          borderRadius: '12px',
+          padding: '48px 32px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          background: isDragActive ? '#F5F5F5' : '#FFFFFF',
+          transition: 'all 0.2s ease',
+          minHeight: '200px',
+        }}
       >
-        <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-          <FileText className="size-6" />
+        <input {...getInputProps()} />
+        <div style={{
+          width: '48px', height: '48px',
+          border: '1.5px solid #111',
+          borderRadius: '50%',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          marginBottom: '16px',
+          fontSize: '20px', color: '#111',
+        }}>↑</div>
+        <div style={{ fontSize: '16px', fontWeight: 600, color: '#111', marginBottom: '6px' }}>
+          {isDragActive ? 'Відпусти файли...' : 'Перетягни або клікни'}
         </div>
-        <div className="min-w-0 flex-1">
-          <p className="truncate font-medium" title={file.name}>
-            {file.name}
-          </p>
-          <p className="text-sm text-muted-foreground">{formatSize(file.size)}</p>
+        <div style={{ fontSize: '13px', color: '#888' }}>
+          PDF, DOCX, XLSX, PPTX, HTML, CSV та інші · до 50МБ
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onClear}
-          aria-label="Прибрати файл"
-        >
-          <X className="size-5" />
-        </Button>
-      </motion.div>
+      </div>
     );
   }
 
+  // HAS FILES state
   return (
-    <div
-      {...getRootProps()}
-      className={[
-        "relative mx-auto flex min-h-[320px] w-[80%] cursor-pointer flex-col items-center justify-center gap-5 rounded-3xl border-2 border-dashed bg-card px-16 py-20 text-center shadow-sm transition-all duration-200",
-        isDragActive
-          ? "scale-[1.02] border-primary bg-primary/5 shadow-lg"
-          : "border-border hover:border-primary/60 hover:bg-secondary/40",
-      ].join(" ")}
-      aria-label="Зона завантаження файлу"
-    >
-      <input {...getInputProps()} />
-      <motion.div
-        animate={isDragActive ? { y: -6, scale: 1.1 } : { y: 0, scale: 1 }}
-        className="flex size-20 items-center justify-center rounded-full bg-gradient-primary text-primary-foreground"
-      >
-        <UploadCloud className="size-10" />
-      </motion.div>
-      <div>
-        <p className="text-xl font-medium">
-          {isDragActive ? "Відпустіть файл тут" : "Перетягніть файл або натисніть"}
-        </p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          До {LIMITS.MAX_FILE_SIZE / (1024 * 1024)} МБ · {multiple ? `до ${MAX_BATCH_FILES} файлів` : "один файл за раз"}
-        </p>
+    <div style={{ width: '100%', maxWidth: '900px', margin: '0 auto' }}>
+      <div style={{
+        display: 'flex',
+        gap: '10px',
+        overflowX: 'auto',
+        paddingBottom: '8px',
+        marginBottom: '20px',
+        scrollbarWidth: 'none',
+      } as React.CSSProperties}>
+        {files.map((file) => {
+          const ext = file.name.split('.').pop()?.toLowerCase() ?? 'file';
+          return (
+            <div key={`${file.name}-${file.size}`} style={{
+              flexShrink: 0, width: '120px',
+              border: '1px solid #E0E0E0', borderRadius: '10px',
+              padding: '12px 10px', background: '#FFFFFF',
+              position: 'relative',
+              display: 'flex', flexDirection: 'column',
+              alignItems: 'center', gap: '6px',
+            }}>
+              <button
+                onClick={() => onRemoveFile(file.name)}
+                aria-label={`Видалити ${file.name}`}
+                style={{
+                  position: 'absolute', top: '6px', right: '6px',
+                  width: '18px', height: '18px',
+                  border: 'none', background: 'transparent',
+                  cursor: 'pointer', color: '#BBBBBB',
+                  fontSize: '12px', borderRadius: '50%',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'all 0.15s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#F0F0F0'; e.currentTarget.style.color = '#111'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#BBBBBB'; }}
+              >✕</button>
+
+              <span style={{ fontSize: '28px' }}>{getIcon(file.name)}</span>
+
+              <span style={{
+                fontSize: '10px', fontFamily: 'monospace', fontWeight: 700,
+                color: '#111', background: '#F0F0F0',
+                padding: '2px 6px', borderRadius: '4px',
+              }}>.{ext}</span>
+
+              <span style={{
+                fontSize: '11px', color: '#555', textAlign: 'center',
+                overflow: 'hidden', textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap', width: '100%',
+              }}>
+                {file.name.length > 12 ? file.name.slice(0, 10) + '...' : file.name}
+              </span>
+
+              <span style={{ fontSize: '10px', color: '#AAAAAA' }}>
+                {file.size < 1024 * 1024
+                  ? `${(file.size / 1024).toFixed(0)}КБ`
+                  : `${(file.size / (1024 * 1024)).toFixed(1)}МБ`}
+              </span>
+            </div>
+          );
+        })}
+
+        {/* "+" add more card */}
+        <div
+          {...getRootProps()}
+          style={{
+            flexShrink: 0, width: '120px', minHeight: '120px',
+            border: '1px dashed #CCCCCC', borderRadius: '10px',
+            background: 'transparent', cursor: 'pointer',
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center', gap: '6px',
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = '#111'; e.currentTarget.style.background = '#F8F8F8'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = '#CCCCCC'; e.currentTarget.style.background = 'transparent'; }}
+        >
+          <input {...getInputProps()} />
+          <span style={{ fontSize: '24px', color: '#CCCCCC' }}>+</span>
+          <span style={{ fontSize: '11px', color: '#AAAAAA' }}>Додати</span>
+        </div>
       </div>
-      <Button
-        type="button"
-        variant="secondary"
-        onClick={(e) => {
-          e.stopPropagation();
-          open();
+
+      <button
+        onClick={onConvert}
+        disabled={isConverting}
+        style={{
+          width: '100%', padding: '16px',
+          background: '#111111', color: '#FFFFFF',
+          border: 'none', borderRadius: '10px',
+          fontSize: '15px', fontWeight: 700,
+          cursor: isConverting ? 'not-allowed' : 'pointer',
+          opacity: isConverting ? 0.6 : 1,
+          transition: 'all 0.2s', letterSpacing: '0.3px',
         }}
       >
-        Обрати файл
-      </Button>
+        {isConverting
+          ? 'Конвертую...'
+          : `Конвертувати ${files.length > 1 ? `${files.length} файли` : 'файл'} →`}
+      </button>
     </div>
   );
 }
