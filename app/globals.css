@@ -143,13 +143,36 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
   body {
     @apply bg-background text-foreground;
   }
   html {
     @apply font-sans;
-    scroll-behavior: smooth;
   }
+}
+
+/* SPA page layout helpers */
+.page-fullscreen {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.page-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 @layer utilities {
@@ -331,22 +354,6 @@
   [style*="animation"] {
     animation: none !important;
   }
-}
-
-/* Scroll snap — full-screen section slides. */
-.snap-container {
-  height: 100vh;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-  overscroll-behavior-y: none;
-}
-.snap-section {
-  scroll-snap-align: start;
-  min-height: 100vh;
-}
-.snap-section.scrollable-inside {
-  scroll-snap-stop: normal;
-  overflow-y: auto;
 }
 
 /* Custom scrollbars. */

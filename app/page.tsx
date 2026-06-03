@@ -1,118 +1,56 @@
 'use client';
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
-import { HeroSection } from '@/components/home/HeroSection';
-import { HowItWorks } from '@/components/home/HowItWorks';
-import { AnimatedBackground } from '@/components/home/AnimatedBackground';
-import { ScrollIndicator } from '@/components/home/ScrollIndicator';
-import { ConverterZone } from '@/components/converter/ConverterZone';
-import { ConverterBoundary } from '@/components/converter/ConverterBoundary';
-import { MarkdownReader } from '@/components/reader/MarkdownReader';
-import { MarkdownEditor } from '@/components/reader/MarkdownEditor';
-import { RoadmapSection } from '@/components/home/RoadmapSection';
+import { HomePage }      from '@/components/pages/HomePage';
+import { ConverterPage } from '@/components/pages/ConverterPage';
+import { EditorPage }    from '@/components/pages/EditorPage';
+import { ReaderPage }    from '@/components/pages/ReaderPage';
 
-type TabId = 'converter' | 'reader' | 'editor';
+type Page = 'home' | 'converter' | 'editor' | 'reader';
 
-const TABS: { id: TabId; icon: string; label: string }[] = [
-  { id: 'converter', icon: '📄', label: 'Конвертувати' },
-  { id: 'reader',    icon: '👁',  label: 'Переглянути' },
-  { id: 'editor',    icon: '✏️',  label: 'Редагувати'  },
-];
+const pageVariants = {
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.25, ease: 'easeOut' as const } },
+  exit:    { opacity: 0, y: -8, transition: { duration: 0.2 } },
+};
 
-export default function HomePage() {
-  const [tab, setTab] = useState<TabId>('converter');
+export default function App() {
+  const [currentPage, setCurrentPage] = useState<Page>('home');
+
+  const navigate = (page: Page) => setCurrentPage(page);
 
   return (
-    <>
-      <Header />
-      <main className="snap-container">
+    <div style={{
+      width: '100vw',
+      height: '100vh',
+      overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'column',
+      background: 'hsl(var(--background))',
+    }}>
 
-      {/* ═══ SECTION 1 — Hero (100vh) ═══ */}
-      <section className="snap-section" style={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-        background: 'hsl(var(--background))',
-      }}>
-        <AnimatedBackground />
-        <HeroSection />
-        <ScrollIndicator targetId="converter" />
-      </section>
+      <Header currentPage={currentPage} onNavigate={navigate} />
 
-      {/* ═══ SECTION 2 — Converter / Reader / Editor (100vh) ═══ */}
-      <section id="converter" className="snap-section scrollable-inside" style={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        background: 'hsl(var(--muted))',
-        padding: '80px 48px',
-      }}>
-        {/* Section heading */}
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <h2 style={{ fontSize: '36px', fontWeight: 700, letterSpacing: '-1px', marginBottom: '8px', color: '#0F172A' }}>
-            Твій інструмент для роботи з файлами
-          </h2>
-          <p style={{ fontSize: '16px', color: '#888' }}>
-            Конвертуй, переглядай або редагуй — все в одному місці
-          </p>
-        </div>
+      <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentPage}
+            variants={pageVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            style={{ position: 'absolute', inset: 0 }}
+          >
+            {currentPage === 'home'      && <HomePage      onNavigate={navigate} />}
+            {currentPage === 'converter' && <ConverterPage />}
+            {currentPage === 'editor'    && <EditorPage />}
+            {currentPage === 'reader'    && <ReaderPage />}
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
-        {/* Tab switcher */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px' }}>
-          <div style={{
-            display: 'inline-flex', gap: '4px',
-            background: '#EBEBEB', padding: '5px', borderRadius: '16px',
-          }}>
-            {TABS.map(t => (
-              <button
-                key={t.id}
-                onClick={() => setTab(t.id)}
-                style={{
-                  padding: '12px 28px', borderRadius: '12px', border: 'none',
-                  cursor: 'pointer', fontSize: '15px', fontWeight: 600,
-                  display: 'flex', alignItems: 'center', gap: '8px',
-                  background: tab === t.id ? 'white' : 'transparent',
-                  color: tab === t.id ? '#1a1a1a' : '#999',
-                  boxShadow: tab === t.id ? '0 2px 8px rgba(0,0,0,0.09)' : 'none',
-                  transition: 'all 0.2s ease',
-                }}
-              >
-                {t.icon} {t.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Tab content */}
-        {tab === 'converter' && (
-          <ConverterBoundary>
-            <ConverterZone />
-          </ConverterBoundary>
-        )}
-        {tab === 'reader' && <MarkdownReader />}
-        {tab === 'editor' && <MarkdownEditor />}
-      </section>
-
-      {/* ═══ SECTION 3 — How it works + Footer (100vh) ═══ */}
-      <section className="snap-section scrollable-inside" style={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        background: 'hsl(var(--background))',
-        padding: '80px 48px 0',
-      }}>
-        <HowItWorks />
-        <RoadmapSection />
-        <Footer />
-      </section>
-      </main>
-    </>
+    </div>
   );
 }

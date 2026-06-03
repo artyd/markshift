@@ -1,144 +1,116 @@
-"use client";
+'use client';
+import { useTheme } from 'next-themes';
 
-import { useState } from "react";
-import Link from "next/link";
-import { Menu, ArrowRight } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { GithubIcon } from "@/components/GithubIcon";
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-  SheetClose,
-} from "@/components/ui/sheet";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { SITE } from "@/lib/constants/site";
+type Page = 'home' | 'converter' | 'editor' | 'reader';
 
-const NAV_LINKS = [{ href: "#how", label: "Як це працює" }];
-
-function scrollToConverter() {
-  document.getElementById("converter")?.scrollIntoView({ behavior: "smooth" });
+interface HeaderProps {
+  currentPage: Page;
+  onNavigate: (page: Page) => void;
 }
 
-export function Header() {
-  const [open, setOpen] = useState(false);
+const NAV_ITEMS: { id: Page; label: string; icon: string }[] = [
+  { id: 'converter', label: 'Конвертація', icon: '📄' },
+  { id: 'editor',    label: 'Редагування', icon: '✏️' },
+  { id: 'reader',    label: 'Перегляд',    icon: '👁' },
+];
+
+export function Header({ currentPage, onNavigate }: HeaderProps) {
+  const { theme, setTheme } = useTheme();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex h-[72px] max-w-6xl items-center justify-between px-4 md:px-8">
-        <Link href="/" className="flex items-center gap-2.5">
-          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-            <rect width="36" height="36" rx="10" fill="hsl(var(--primary))"/>
-            <path d="M8 26V10l10 10 10-10v16" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-            <path d="M22 20h6M25 17l3 3-3 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          <div>
-            <div style={{ fontSize: '17px', fontWeight: 700, letterSpacing: '-0.4px', lineHeight: 1, color: 'hsl(var(--foreground))' }}>
-              MarkShift
-            </div>
-            <div style={{ fontSize: '10px', color: '#999', letterSpacing: '0.5px', lineHeight: 1, marginTop: '2px' }}>
-              FILE CONVERTER
-            </div>
-          </div>
-        </Link>
+    <header style={{
+      height: '72px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '0 48px',
+      borderBottom: '1px solid hsl(var(--border))',
+      background: 'hsl(var(--background))',
+      flexShrink: 0,
+      zIndex: 100,
+      position: 'relative',
+    }}>
 
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-8 text-[15px] md:flex lg:gap-10">
-          {NAV_LINKS.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {l.label}
-            </Link>
-          ))}
-          <a
-            href={SITE.githubUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-            className="flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <GithubIcon className="size-4" />
-            GitHub
-          </a>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <Button className="h-10 gap-1.5" onClick={scrollToConverter}>
-              Конвертувати
-              <ArrowRight className="size-4" />
-            </Button>
+      {/* Logo — click returns to home */}
+      <div
+        onClick={() => onNavigate('home')}
+        style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
+      >
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <rect width="36" height="36" rx="10" fill="hsl(var(--primary))"/>
+          <path d="M8 26V10l10 10 10-10v16" stroke="white" strokeWidth="2.5"
+            strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          <path d="M22 20h6M25 17l3 3-3 3" stroke="white" strokeWidth="1.8"
+            strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+        <div>
+          <div style={{ fontSize: '17px', fontWeight: 700, letterSpacing: '-0.4px',
+            lineHeight: 1, color: 'hsl(var(--foreground))' }}>
+            MarkShift
           </div>
-        </nav>
-
-        {/* Mobile actions */}
-        <div className="flex items-center gap-1 md:hidden">
-          <ThemeToggle />
-          <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger
-            render={<Button variant="ghost" size="icon" aria-label="Меню" />}
-          >
-            <Menu className="size-5" />
-          </SheetTrigger>
-          <SheetContent side="right" className="w-64">
-            <SheetTitle className="flex items-center gap-2">
-              <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
-                <rect width="36" height="36" rx="10" fill="hsl(var(--primary))"/>
-                <path d="M8 26V10l10 10 10-10v16" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                <path d="M22 20h6M25 17l3 3-3 3" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <span style={{ fontWeight: 700 }}>MarkShift</span>
-            </SheetTitle>
-            <nav className="mt-4 flex flex-col gap-1">
-              {NAV_LINKS.map((l) => (
-                <SheetClose
-                  key={l.href}
-                  render={
-                    <Link
-                      href={l.href}
-                      className={buttonVariants({
-                        variant: "ghost",
-                        size: "lg",
-                        className: "justify-start",
-                      })}
-                    />
-                  }
-                >
-                  {l.label}
-                </SheetClose>
-              ))}
-              <a
-                href={SITE.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={buttonVariants({
-                  variant: "ghost",
-                  size: "lg",
-                  className: "justify-start",
-                })}
-              >
-                <GithubIcon className="size-4" />
-                GitHub
-              </a>
-              <SheetClose
-                render={
-                  <Button
-                    size="lg"
-                    className="mt-2 gap-1.5"
-                    onClick={scrollToConverter}
-                  />
-                }
-              >
-                Конвертувати
-                <ArrowRight className="size-4" />
-              </SheetClose>
-            </nav>
-          </SheetContent>
-          </Sheet>
+          <div style={{ fontSize: '10px', color: 'hsl(var(--muted-foreground))',
+            letterSpacing: '0.5px', lineHeight: 1, marginTop: '2px' }}>
+            FILE CONVERTER
+          </div>
         </div>
       </div>
+
+      {/* Nav buttons */}
+      <nav style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+        {NAV_ITEMS.map(item => (
+          <button
+            key={item.id}
+            onClick={() => onNavigate(item.id)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '6px',
+              padding: '8px 20px', borderRadius: '10px', border: 'none',
+              cursor: 'pointer', fontSize: '15px', fontWeight: 600,
+              transition: 'all 0.2s ease',
+              background: currentPage === item.id
+                ? 'hsl(var(--primary))'
+                : 'transparent',
+              color: currentPage === item.id
+                ? 'hsl(var(--primary-foreground))'
+                : 'hsl(var(--muted-foreground))',
+            }}
+            onMouseEnter={e => {
+              if (currentPage !== item.id) {
+                e.currentTarget.style.background = 'hsl(var(--muted))';
+                e.currentTarget.style.color = 'hsl(var(--foreground))';
+              }
+            }}
+            onMouseLeave={e => {
+              if (currentPage !== item.id) {
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.color = 'hsl(var(--muted-foreground))';
+              }
+            }}
+          >
+            <span>{item.icon}</span>
+            {/* Hide label on mobile, show on md+ */}
+            <span className="hidden md:inline">{item.label}</span>
+          </button>
+        ))}
+      </nav>
+
+      {/* Right: theme toggle */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <button
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          aria-label="Перемкнути тему"
+          style={{
+            width: '36px', height: '36px', borderRadius: '8px',
+            border: '1px solid hsl(var(--border))',
+            background: 'hsl(var(--muted))',
+            color: 'hsl(var(--foreground))',
+            cursor: 'pointer', fontSize: '16px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}
+        >
+          {theme === 'dark' ? '☀️' : '🌙'}
+        </button>
+      </div>
+
     </header>
   );
 }
