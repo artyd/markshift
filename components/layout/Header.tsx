@@ -1,5 +1,4 @@
 'use client';
-import { useTheme } from 'next-themes';
 
 type Page = 'home' | 'converter' | 'editor' | 'reader';
 
@@ -15,7 +14,6 @@ const NAV_ITEMS: { id: Page; label: string; icon: string }[] = [
 ];
 
 export function Header({ currentPage, onNavigate }: HeaderProps) {
-  const { theme, setTheme } = useTheme();
 
   return (
     <header style={{
@@ -92,24 +90,6 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
           </button>
         ))}
       </nav>
-
-      {/* Right: theme toggle */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <button
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          aria-label="Перемкнути тему"
-          style={{
-            width: '36px', height: '36px', borderRadius: '8px',
-            border: '1px solid hsl(var(--border))',
-            background: 'hsl(var(--muted))',
-            color: 'hsl(var(--foreground))',
-            cursor: 'pointer', fontSize: '16px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}
-        >
-          {theme === 'dark' ? '☀️' : '🌙'}
-        </button>
-      </div>
 
     </header>
   );
