@@ -6,7 +6,6 @@ import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { FileUploader } from "./FileUploader";
-import { ConversionProgress } from "./ConversionProgress";
 import { BatchConverter } from "./BatchConverter";
 import { PreviewModal } from "./PreviewModal";
 import { getExtension } from "@/lib/utils/fileDetector";
@@ -180,6 +179,8 @@ export function ConverterZone() {
     if (state.result) handleDownload(state.result);
   }, [state.result]);
 
+  const handleReset = () => dispatch({ type: 'clear' });
+
   // results array for PreviewModal
   const results = state.result ? [state.result] : [];
 
@@ -222,7 +223,25 @@ export function ConverterZone() {
 
           {state.phase === "converting" && (
             <motion.div key="converting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <ConversionProgress value={state.progress} />
+              <div style={{
+                display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center',
+                gap: '24px', padding: '48px', width: '100%',
+              }}>
+                <div style={{
+                  width: '56px', height: '56px',
+                  border: '3px solid #E0E0E0',
+                  borderTop: '3px solid #111111',
+                  borderRadius: '50%',
+                  animation: 'spin 0.8s linear infinite',
+                }} />
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '18px', fontWeight: 600, color: '#111', marginBottom: '6px' }}>
+                    Конвертую файл...
+                  </div>
+                  <div style={{ fontSize: '14px', color: '#888' }}>Зачекай кілька секунд</div>
+                </div>
+              </div>
             </motion.div>
           )}
 
@@ -241,11 +260,11 @@ export function ConverterZone() {
               }}>
                 {/* Header */}
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '40px', marginBottom: '12px' }}>✓</div>
-                  <div style={{ fontSize: '20px', fontWeight: 700, color: '#111' }}>
+                  <div style={{ fontSize: '48px', marginBottom: '12px' }}>✓</div>
+                  <div style={{ fontSize: '20px', fontWeight: 700, color: 'hsl(var(--foreground))' }}>
                     {results.length === 1 ? 'Файл готовий' : `${results.length} файли готові`}
                   </div>
-                  <div style={{ fontSize: '14px', color: '#888', marginTop: '4px' }}>
+                  <div style={{ fontSize: '14px', color: 'hsl(var(--muted-foreground))', marginTop: '4px' }}>
                     Конвертація завершена успішно
                   </div>
                 </div>
@@ -253,18 +272,18 @@ export function ConverterZone() {
                 {/* Three action cards */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', width: '100%' }}>
 
-                  {/* DOWNLOAD — black (inverted) */}
+                  {/* DOWNLOAD — foreground fill */}
                   <button
                     onClick={handleDownloadAll}
                     style={{
                       padding: '28px 20px',
-                      border: '1.5px solid #111', borderRadius: '16px',
-                      background: '#111', color: '#FFF', cursor: 'pointer',
+                      border: '1.5px solid hsl(var(--foreground))', borderRadius: '16px',
+                      background: 'hsl(var(--foreground))', color: 'hsl(var(--background))', cursor: 'pointer',
                       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px',
                       transition: 'all 0.22s ease',
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.background = '#333'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.15)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = '#111'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                    onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.2)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
                   >
                     <span style={{ fontSize: '32px' }}>⬇</span>
                     <div>
@@ -275,45 +294,45 @@ export function ConverterZone() {
                     </div>
                   </button>
 
-                  {/* PREVIEW — white outline */}
+                  {/* PREVIEW — card outline */}
                   <button
                     onClick={() => setPreviewOpen(true)}
                     style={{
                       padding: '28px 20px',
-                      border: '1.5px solid #E0E0E0', borderRadius: '16px',
-                      background: '#FFFFFF', color: '#111', cursor: 'pointer',
+                      border: '1.5px solid hsl(var(--border))', borderRadius: '16px',
+                      background: 'hsl(var(--card))', color: 'hsl(var(--foreground))', cursor: 'pointer',
                       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px',
                       transition: 'all 0.22s ease',
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#111'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#E0E0E0'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'hsl(var(--foreground))'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'hsl(var(--border))'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
                   >
                     <span style={{ fontSize: '32px' }}>👁</span>
                     <div>
                       <div style={{ fontSize: '16px', fontWeight: 700 }}>Перегляд</div>
-                      <div style={{ fontSize: '12px', color: '#888', marginTop: '2px' }}>
+                      <div style={{ fontSize: '12px', color: 'hsl(var(--muted-foreground))', marginTop: '2px' }}>
                         {results.length > 1 ? `${results.length} вкладки` : 'Відкрити файл'}
                       </div>
                     </div>
                   </button>
 
-                  {/* BACK — white outline */}
+                  {/* BACK — card outline */}
                   <button
-                    onClick={() => dispatch({ type: 'clear' })}
+                    onClick={handleReset}
                     style={{
                       padding: '28px 20px',
-                      border: '1.5px solid #E0E0E0', borderRadius: '16px',
-                      background: '#FFFFFF', color: '#111', cursor: 'pointer',
+                      border: '1.5px solid hsl(var(--border))', borderRadius: '16px',
+                      background: 'hsl(var(--card))', color: 'hsl(var(--foreground))', cursor: 'pointer',
                       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px',
                       transition: 'all 0.22s ease',
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#111'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#E0E0E0'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'hsl(var(--foreground))'; e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'hsl(var(--border))'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
                   >
                     <span style={{ fontSize: '32px' }}>↩</span>
                     <div>
                       <div style={{ fontSize: '16px', fontWeight: 700 }}>Назад</div>
-                      <div style={{ fontSize: '12px', color: '#888', marginTop: '2px' }}>Конвертувати ще</div>
+                      <div style={{ fontSize: '12px', color: 'hsl(var(--muted-foreground))', marginTop: '2px' }}>Конвертувати ще</div>
                     </div>
                   </button>
 

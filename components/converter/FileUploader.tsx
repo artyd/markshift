@@ -73,11 +73,11 @@ export function FileUploader({
         {...getRootProps()}
         style={{
           width: '100%',
-          maxWidth: '600px',
+          maxWidth: '100%',
           margin: '0 auto',
           border: '1px solid #E0E0E0',
           borderRadius: '12px',
-          padding: '48px 32px',
+          padding: '56px 48px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -109,7 +109,7 @@ export function FileUploader({
 
   // HAS FILES state
   return (
-    <div style={{ width: '100%', maxWidth: '900px', margin: '0 auto' }}>
+    <div style={{ width: '100%', maxWidth: '100%', margin: '0 auto' }}>
       <div style={{
         display: 'flex',
         gap: '10px',

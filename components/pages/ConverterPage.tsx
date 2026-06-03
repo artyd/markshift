@@ -33,7 +33,7 @@ export function ConverterPage() {
       <div style={{
         flex: 1, overflow: 'auto',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: '32px 80px',
+        padding: '32px 48px',
       }}>
         <ConverterZone />
       </div>

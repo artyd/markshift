@@ -80,109 +80,43 @@ export function HomePage({ onNavigate }: HomePageProps) {
           </div>
 
           {/* Three nav buttons */}
-          <div style={{
-            display: 'flex',
-            gap: '10px',
-            marginTop: '32px',
-            flexWrap: 'wrap',
-          }}>
-
-            {/* PRIMARY: black fill */}
-            <button
-              onClick={() => onNavigate('converter')}
-              style={{
-                padding: '12px 24px',
-                borderRadius: '10px',
-                border: '1.5px solid #111111',
-                background: '#111111',
-                color: '#FFFFFF',
-                fontSize: '15px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '7px',
-                transition: 'all 0.2s ease',
-                whiteSpace: 'nowrap',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.background = '#333333';
-                e.currentTarget.style.borderColor = '#333333';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = '#111111';
-                e.currentTarget.style.borderColor = '#111111';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-            >
-              <span>📄</span> Конвертація
-            </button>
-
-            {/* OUTLINE */}
-            <button
-              onClick={() => onNavigate('editor')}
-              style={{
-                padding: '12px 24px',
-                borderRadius: '10px',
-                border: '1.5px solid #E0E0E0',
-                background: 'transparent',
-                color: '#111111',
-                fontSize: '15px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '7px',
-                transition: 'all 0.2s ease',
-                whiteSpace: 'nowrap',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.borderColor = '#111111';
-                e.currentTarget.style.background = '#F5F5F5';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.borderColor = '#E0E0E0';
-                e.currentTarget.style.background = 'transparent';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-            >
-              <span>✏️</span> Редагування
-            </button>
-
-            {/* OUTLINE */}
-            <button
-              onClick={() => onNavigate('reader')}
-              style={{
-                padding: '12px 24px',
-                borderRadius: '10px',
-                border: '1.5px solid #E0E0E0',
-                background: 'transparent',
-                color: '#111111',
-                fontSize: '15px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '7px',
-                transition: 'all 0.2s ease',
-                whiteSpace: 'nowrap',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.borderColor = '#111111';
-                e.currentTarget.style.background = '#F5F5F5';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.borderColor = '#E0E0E0';
-                e.currentTarget.style.background = 'transparent';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-            >
-              <span>👁</span> Перегляд
-            </button>
-
+          <div style={{ display: 'flex', gap: '10px', marginTop: '32px', flexWrap: 'wrap' }}>
+            {[
+              { page: 'converter', icon: '📄', label: 'Конвертація' },
+              { page: 'editor',    icon: '✏️', label: 'Редагування' },
+              { page: 'reader',    icon: '👁',  label: 'Перегляд'   },
+            ].map(btn => (
+              <button
+                key={btn.page}
+                onClick={() => onNavigate(btn.page as any)}
+                style={{
+                  padding: '12px 24px', borderRadius: '10px',
+                  border: '1.5px solid hsl(var(--border))',
+                  background: 'hsl(var(--background))',
+                  color: 'hsl(var(--foreground))',
+                  fontSize: '15px', fontWeight: 600, cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', gap: '7px',
+                  transition: 'all 0.2s ease', whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = 'hsl(var(--foreground))';
+                  e.currentTarget.style.color = 'hsl(var(--background))';
+                  e.currentTarget.style.borderColor = 'hsl(var(--foreground))';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.12)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = 'hsl(var(--background))';
+                  e.currentTarget.style.color = 'hsl(var(--foreground))';
+                  e.currentTarget.style.borderColor = 'hsl(var(--border))';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <span>{btn.icon}</span>
+                {btn.label}
+              </button>
+            ))}
           </div>
         </div>
 
