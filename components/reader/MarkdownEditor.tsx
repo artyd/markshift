@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { toast } from 'sonner';
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false });
 const MDPreview = dynamic(() => import('@uiw/react-markdown-preview'), { ssr: false });
@@ -36,11 +37,22 @@ export function MarkdownEditor() {
     noClick: !!content,
   });
 
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(content);
+      toast.success('Markdown скопійовано в буфер обміну');
+    } catch {
+      toast.error('Не вдалося скопіювати Markdown');
+    }
+  };
+
   const handleSave = () => {
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([content], { type: 'text/markdown' }));
+    const url = URL.createObjectURL(new Blob([content], { type: 'text/markdown' }));
+    a.href = url;
     a.download = fileName || 'document.md';
     a.click();
+    URL.revokeObjectURL(url);
     setIsModified(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
@@ -153,6 +165,18 @@ export function MarkdownEditor() {
             />
           </label>
           <button
+            type="button"
+            aria-label="Копіювати Markdown у буфер обміну"
+            onClick={handleCopy}
+            style={{
+              padding: '8px 16px', borderRadius: '8px', border: '1px solid #E2E8F0',
+              background: 'white', color: '#555', fontSize: '13px', cursor: 'pointer', fontWeight: 500,
+            }}
+          >
+            📋 Копіювати Markdown
+          </button>
+          <button
+            type="button"
             onClick={handleSave}
             style={{
               padding: '8px 20px', borderRadius: '8px', border: 'none',
